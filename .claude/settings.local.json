@@ -5,7 +5,15 @@
       "Bash(npm install:*)",
       "Bash(npm uninstall:*)",
       "Bash(mkdir:*)",
-      "Bash(npx shadcn@latest add:*)"
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(git mv:*)",
+      "Bash(mv:*)",
+      "Bash(npm run:*)",
+      "Bash(chmod:*)",
+      "Bash(./test-sql-connection.sh:*)",
+      "Bash(./test-simple-sql.sh:*)",
+      "Bash(git rm:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }

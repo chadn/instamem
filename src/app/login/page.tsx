@@ -4,11 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/providers/auth-provider'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function LoginPage() {
   const { user, loading, signIn } = useAuth()
   const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (user) {
@@ -34,17 +35,36 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3">
+              <p className="text-red-800 text-sm">{error}</p>
+            </div>
+          )}
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => signIn('google')}
+            onClick={async () => {
+              try {
+                setError(null)
+                await signIn('google')
+              } catch (err) {
+                setError(err instanceof Error ? err.message : 'Authentication failed')
+              }
+            }}
           >
             Continue with Google
           </Button>
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => signIn('github')}
+            onClick={async () => {
+              try {
+                setError(null)
+                await signIn('github')
+              } catch (err) {
+                setError(err instanceof Error ? err.message : 'GitHub authentication is not currently enabled')
+              }
+            }}
           >
             Continue with GitHub
           </Button>
