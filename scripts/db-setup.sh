@@ -2,6 +2,7 @@
 
 # Database setup script using psql
 # This script manages database schema using SQL files
+# Note that SUPABASE_PROJECT_PASSWD can be seen by ps command, so use on trusted systems only.
 
 set -e  # Exit on any error
 

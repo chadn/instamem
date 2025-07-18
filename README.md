@@ -60,7 +60,13 @@ WIP - see [todo](docs/todo.md)
    - note supabase project password
 
 3. **Configure environment variables:**
-   `cp env.example .env.local` and update your Supabase credentials.
+   Do the following and then add your Supabase credentials.
+   ```
+   cat <<EOF > .env.local
+   SUPABASE_PROJECT_ID=__your_project_id_here__
+   SUPABASE_PROJECT_PASSWD=__your_project_password_here__
+   EOF
+   ```
 
 4. **Set up database:**
    
