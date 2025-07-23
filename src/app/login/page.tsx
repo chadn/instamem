@@ -14,6 +14,22 @@ export default function LoginPage() {
   useEffect(() => {
     if (user) {
       router.push('/')
+      return
+    }
+    
+    // Check if we're being redirected here with an OAuth code
+    // This shouldn't happen, but let's handle it gracefully
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get('code')
+    const error = params.get('error')
+    
+    if (code && !error) {
+      console.log('OAuth code received on login page, redirecting to auth callback')
+      // Use router.replace to avoid infinite loops
+      router.replace(`/auth/callback?code=${code}`)
+    } else if (error) {
+      console.log('OAuth error received:', error)
+      setError(`Authentication failed: ${error}`)
     }
   }, [user, router])
 

@@ -59,6 +59,12 @@ export default function Home() {
                   type="text"
                   placeholder="Search memories..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  maxLength={100}
+                  onChange={(e) => {
+                    // Basic sanitization - remove HTML tags and script content
+                    const sanitized = e.target.value.replace(/<[^>]*>/g, '').trim()
+                    e.target.value = sanitized
+                  }}
                 />
                 <p className="text-sm text-gray-500">
                   Try searching for people, places, or events from your memories

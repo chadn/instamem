@@ -38,21 +38,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase])
 
   const signIn = async (provider: 'google' | 'github') => {
+    // Ensure we're fully signed out before starting new auth flow
+    await supabase.auth.signOut()
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        // Force account selection to avoid automatic login with cached credentials
+        queryParams: {
+          prompt: 'select_account'
+        }
       },
     })
     
     if (error) {
-      console.error('Sign in error:', error)
       throw error
     }
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut()
+      // Clear any cached user data
+      setUser(null)
+      // Force a page reload to ensure all session data is cleared
+      window.location.href = '/login'
+    } catch (error) {
+      console.error('Sign out error:', error)
+      // Force redirect even if signOut fails
+      window.location.href = '/login'
+    }
   }
 
   return (

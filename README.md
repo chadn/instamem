@@ -58,6 +58,10 @@ WIP - see [todo](docs/todo.md)
 2. **Create new supabase project under your supabase org**
    - note supabase project id
    - note supabase project password
+   - copy your anon public key https://supabase.com/dashboard/project/_/settings/api-keys
+   - In https://supabase.com/dashboard/project/_/auth/url-configuration
+     make sure site url is  http://localhost:3000/
+     make sure Redirect URLs includes  http://localhost:3000/auth/callback
 
 3. **Configure environment variables:**
    Do the following and then add your Supabase credentials.
@@ -65,6 +69,9 @@ WIP - see [todo](docs/todo.md)
    cat <<EOF > .env.local
    SUPABASE_PROJECT_ID=__your_project_id_here__
    SUPABASE_PROJECT_PASSWD=__your_project_password_here__
+   # NEXT_PUBLIC_ prefix tells next.js to make accessible everywhere
+   NEXT_PUBLIC_SUPABASE_URL=https://__your_project_id_here__.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=__your_anon_key_here__
    EOF
    ```
 

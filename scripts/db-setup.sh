@@ -13,9 +13,11 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Load environment variables
+# Load environment variables safely
 if [ -f .env.local ]; then
-    export $(cat .env.local | grep -v '^#' | xargs)
+    set -a  # Enable automatic export of variables
+    source .env.local
+    set +a  # Disable automatic export
 else
     echo -e "${RED}❌ .env.local file not found${NC}"
     exit 1
@@ -141,6 +143,10 @@ case "$1" in
                 count=$(psql "$DB_CONNECTION" -t -c "SELECT COUNT(*) FROM $table;" | tr -d ' ')
                 echo "   $table: $count rows"
             done
+            
+            # Show user count
+            user_count=$(psql "$DB_CONNECTION" -t -c "SELECT COUNT(DISTINCT user_id) FROM memories;" | tr -d ' ')
+            echo "   users: $user_count users"
         else
             echo -e "${RED}❌ Database schema missing${NC}"
         fi
