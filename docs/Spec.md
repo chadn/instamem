@@ -35,10 +35,6 @@ MVP
         -   Output parsing and tag validation
         -   UI for confirming/correcting structured result
     -   🧠 Consider fallback if model output is uncertain
--   **Advanced (Later)**
-    -   🔲 **Semantic search**: Add `pgvector` and OpenAI or open-source embeddings (e.g., `text-embedding-3-small`)
-    -   🔲 Fuzzy search with `pg_trgm` (for typos, similarity)
-    -   🔲 Offline search with Fuse.js and cached JSON of memories/tags
 
 ## Architecture
 

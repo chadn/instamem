@@ -13,7 +13,10 @@
       "Bash(./test-sql-connection.sh:*)",
       "Bash(./test-simple-sql.sh:*)",
       "Bash(git rm:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(rmdir:*)",
+      "Bash(rm:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   }

@@ -1,0 +1,16 @@
+[{
+  "uuid":"xxxxx-xxxxxxx",
+  "add-memories":[
+    {
+      "content":"memory example",
+      "date":"now",
+      "tags":["person:chad","feeling:excited"]
+    },
+    {
+      "content":"updated resume",
+      "date":"2025-06-25",
+      "url":"https://chadnorwood.com/resume/",
+      "tags":["person:chad","feeling:proud"]
+    }
+  ]
+}]

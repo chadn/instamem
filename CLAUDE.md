@@ -6,12 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 InstaMem is a personal memory assistant that lets users instantly search memories using keywords. It consists of two separate repositories:
 
-1. **instamem-frontend** (React Next.js on Vercel)
+1. **instamem** (React Next.js on Vercel)
    - Supabase auth with JWT tokens
    - Direct Supabase reads for search functionality
    - Calls instamem-server for memory updates
    - Uses ShadCN UI components
-
+   - contains CLI tools to configurate DB and update its data
+   
 2. **instamem-server** (Python FastAPI on Render)
    - LangChain + OpenAI for text-to-structured-data conversion
    - Uses JWT from frontend to authenticate Supabase updates

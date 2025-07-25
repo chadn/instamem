@@ -2,7 +2,7 @@
 
 A simple app that lets you enter a single word to find "memories" that match or relate.
 
-InstaMem is a simple, fast, and personal memory assistant. Just type a word, and instantly surface memories connected to people, places, events, or ideas — all organized by tags you define.
+InstaMem is a simple, fast, and personal memory assistant. Just type a word, or even part of a word, and instantly surface memories connected to people, places, events, or ideas — all organized by tags you define.
 
 🔍 Recall at a Glance
 
@@ -46,7 +46,7 @@ InstaMem is a simple, fast, and personal memory assistant. Just type a word, and
 ```
 ## Status
 
-WIP - see [todo](docs/todo.md)
+WIP - see [Roadmap](docs/roadmap.md)
 
 ## Quick Start
 
@@ -124,10 +124,11 @@ WIP - see [todo](docs/todo.md)
 ## Development
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run lint     # Run ESLint
-npm run db       # Database management commands
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run lint         # Run ESLint
+npm run db           # Database management commands
+npm run add-memories # CLI tool to add memories
 ```
 
 ## Technical Stack
@@ -144,5 +145,6 @@ This repository contains the React frontend. The backend (InstaMem server) will 
 
 ## Documentation
 
-- [Detailed Spec](docs/Spec.md)
-- [Implementation Todo](docs/todo.md)
+- [Feature Roadmap](docs/roadmap.md) - What's being built when
+- [Documentation Index](docs/README.md) - Full documentation navigation
+- [Development Setup](docs/technical/development.md) - Getting started guide
