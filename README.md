@@ -1,6 +1,6 @@
-# InstaMem — Instantly Remember the Details of Your Life
+# InstaMem — Instantly Remember Important Details
 
-A simple app that lets you enter a single word to find "memories" that match or relate.
+A simple app that lets you enter a single word to find "memories" that match.
 
 InstaMem is a simple, fast, and personal memory assistant. Just type a word, or even part of a word, and instantly surface memories connected to people, places, events, or ideas — all organized by tags you define.
 
@@ -17,7 +17,17 @@ InstaMem is a simple, fast, and personal memory assistant. Just type a word, or 
 -   Enter plain text — AI helps structure it automatically
 -   Link each memory to tags, timestamps, and more
 
+
+## Technical Stack
+
+- **Framework:** Next.js 14 with App Router
+- **UI:** ShadCN UI + Tailwind CSS
+- **Database:** Supabase (PostgreSQL)
+- **Authentication:** Supabase Auth, RLS, Github + Google Login
+- **Deployment:** Vercel
+
 ## Architecture
+
 
 ```
                    🧠 InstaMem System Architecture
@@ -26,16 +36,16 @@ InstaMem is a simple, fast, and personal memory assistant. Just type a word, or 
 │       React Frontend      │ ───── Auth ──────▶ │      Supabase DB         │
 │     (Runs in Browser)     │ ◀───── JWT ─────── │ (Postgres + Auth + RLS)  │
 │      JWT used for auth    │                    │                          │
-│     in reads and udpates  │ ────── read ─────▶ │                          │
-└────────────┬──────────────┘                    └──────────┬───────────────┘
-             │  update                                      ▲
-             ▼                                              │
-     ┌─────────────────────────────┐                        │
-     │    LangChain API Server     │                        │
-     │ (Node.js or Python backend) │                        │
-     └────────┬───────────┬────────┘                        │
-              │           │                                 │
-              │           └──▶ Second, Update DB via Tool ──┘
+│     in reads and updates  │ ────── read ─────▶ │                          │
+└────────────┬──────────────┘                    └────────┬────┬────────────┘
+             │  update                                    ▲    ▲
+             ▼                                            │    │
+     ┌─────────────────────────────┐                      │    └ CLI for
+     │    LangChain API Server     │                      │     db setup,
+     │ (Python FastAPI backend)    │                      │    add-memories
+     └────────┬─────────┬──────────┘                      │
+              │         │                                 │
+              │         └──▶ Second, Update DB via Tool ──┘
               │ First,
               │ Parse Text to Structured Data via Tool Function
               │      ┌──────────────────────────────┐
@@ -44,6 +54,7 @@ InstaMem is a simple, fast, and personal memory assistant. Just type a word, or 
                      │      update Supabase DB)     │
                      └──────────────────────────────┘
 ```
+
 ## Status
 
 WIP - see [Roadmap](docs/roadmap.md)
@@ -130,14 +141,6 @@ npm run lint         # Run ESLint
 npm run db           # Database management commands
 npm run add-memories # CLI tool to add memories
 ```
-
-## Technical Stack
-
-- **Framework:** Next.js 14 with App Router
-- **UI:** ShadCN UI + Tailwind CSS
-- **Database:** Supabase (PostgreSQL)
-- **Authentication:** Supabase Auth
-- **Deployment:** Vercel
 
 ## Architecture
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase-browser'
 import { Search } from 'lucide-react'
+import { highlightPartialMatches } from '@/utils/searchHighlight'
 
 interface Memory {
     id: string
@@ -261,7 +262,9 @@ export function MemorySearch() {
                                             
                                             {/* Context (Content) */}
                                             <span className="text-gray-900 flex-1 truncate text-left">
-                                                {memory.content}
+                                                {highlightPartialMatches(memory.content, query, {
+                                                    highlightClassName: 'bg-blue-200 text-blue-900 px-1 rounded font-medium'
+                                                })}
                                             
                                             {/* URL */}
                                             {memory.url && (
@@ -273,7 +276,9 @@ export function MemorySearch() {
                                                         rel="noopener noreferrer"
                                                         className="text-blue-600 hover:text-blue-800 text-xs whitespace-nowrap flex-shrink-0 hover:underline"
                                                     >
-                                                        {formatUrl(memory.url)}
+                                                        {highlightPartialMatches(formatUrl(memory.url), query, {
+                                                            highlightClassName: 'bg-blue-300 text-blue-900 px-1 rounded font-medium'
+                                                        })}
                                                     </a>
                                                 </>
                                             )}
@@ -288,7 +293,9 @@ export function MemorySearch() {
                                                         key={index}
                                                         className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800"
                                                     >
-                                                        {tag.key}:{tag.value}
+                                                        {highlightPartialMatches(`${tag.key}:${tag.value}`, query, {
+                                                            highlightClassName: 'bg-blue-300 text-blue-900 px-0.5 rounded font-medium'
+                                                        })}
                                                     </span>
                                                 ))}
                                             </div>

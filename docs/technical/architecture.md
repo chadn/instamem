@@ -158,3 +158,71 @@ The architecture supports gradual evolution:
 4. **Phase 4**: Multi-device sync with offline support
 
 Each phase builds on the previous without requiring major architectural changes.
+
+## Investigations
+
+### Algolia for InstaMem: Analysis
+
+  What Algolia Would Provide:
+
+  Instant Search Benefits:
+  - Sub-100ms search responses globally via their CDN
+  - Typo tolerance and fuzzy matching built-in
+  - Advanced ranking with customizable relevance
+  - Faceted search perfect for tag filtering
+  - Search analytics and performance insights
+
+  Developer Experience:
+  - InstantSearch UI components for React
+  - Real-time indexing via webhooks
+  - A/B testing for search relevance
+  - Dashboard for search analytics and tuning
+
+  Architectural Fit:
+
+  ┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
+  │  React Frontend │───▶│   Algolia    │    │  Supabase DB    │
+  │                 │    │   Search     │◀───│                 │
+  │ - UI components │    │   Index      │    │ - Auth/RLS      │
+  │ - InstantSearch │    │              │    │ - Memory CRUD   │
+  └─────────────────┘    └──────────────┘    └─────────────────┘
+
+  Pros for InstaMem:
+
+  ✅ Perfect for personal memory search:
+  - Handles InstaMem's core use case exceptionally well
+  - Natural language queries work better than SQL ILIKE
+  - Tag-based faceting is exactly what Algolia excels at
+
+  ✅ Immediate performance gain:
+  - Eliminates the 500ms debounce need
+  - True real-time search as you type
+  - Scales effortlessly with memory volume
+
+  ✅ Enhanced search features:
+  - "Find memories about Sarah from coffee shops" would work intuitively
+  - Automatic highlighting of search terms
+  - Search suggestions and autocomplete
+
+  Cons & Considerations:
+
+  ❌ Cost implications:
+  - Free tier: 10K search operations/month, 10K records
+  - Essential plan: $500/month for 250K operations, 100K records
+  - For personal use, likely fits free tier, but could scale quickly
+
+  ❌ Data privacy concerns:
+  - Personal memories stored on Algolia's servers
+  - Less control over data residency
+  - Additional data processing agreement needed
+
+  ❌ Architecture complexity:
+  - Need to sync Supabase → Algolia
+  - Dual write operations (memory to DB + index to Algolia)
+  - Potential consistency issues between DB and search index
+
+  ❌ Offline capabilities:
+  - Algolia doesn't support offline search
+  - Would complicate the offline strategy significantly
+
+More at https://www.algolia.com/doc/guides/building-search-ui/getting-started/react/

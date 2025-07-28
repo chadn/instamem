@@ -8,12 +8,14 @@ Real-time search that finds memories as you type using keyword matching.
 
 ## Current State (0.1.0)
 - Basic keyword search with ILIKE pattern matching
-- 500ms debounced queries for responsive feel
+- 500ms debounced Supabase queries for responsive feel
 - Direct Supabase queries with RLS security
-
 - RLS ensures users only search their own memories
+- **Search term highlighting**: Partial match highlighting in content, URLs, and tags (like Algolia)
+
 ## Next Steps (0.2.0)
 - Upgrade to PostgreSQL full-text search with `to_tsvector`
+- 100ms debounced queries for local instant searchresponsive feel
 - Add search filters by tags and date
 - Implement search result highlighting
 
@@ -33,6 +35,7 @@ Real-time search that finds memories as you type using keyword matching.
 
 ## What I Learned
 - **ILIKE Search**: Simple but effective for MVP - case-insensitive, works with partial matches
-- **Debouncing**: 500ms delay gives real-time feel without excessive API calls
+- **Debouncing**: 500ms delay gives real-time feel without excessive API calls. For local, using 100ms to feel "instant".
 - **Direct DB Queries**: Supabase client queries are fast enough for real-time search
 - **RLS Protection**: Client-side queries are secure when RLS policies are properly configured
+- **Search Highlighting**: Client-side partial match highlighting is surprisingly simple (~50 lines) and works offline, providing Algolia-like UX without external dependencies
