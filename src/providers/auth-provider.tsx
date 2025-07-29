@@ -3,6 +3,31 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase-browser'
+import { registerServiceWorker } from '@/lib/service-worker'
+
+// Global promise to warm Fuse.js chunk
+let fuseWarmPromise: Promise<typeof import('fuse.js')> | null = null
+
+declare global {
+  var __fusePromise: Promise<typeof import('fuse.js').default> | undefined
+}
+
+function warmFuseChunk() {
+  if (!fuseWarmPromise) {
+    console.log('🔥 Warming Fuse.js chunk...')
+    fuseWarmPromise = import('fuse.js')
+    
+    // Store in global for offline search to reuse
+    globalThis.__fusePromise = fuseWarmPromise.then(mod => mod.default)
+    
+    fuseWarmPromise.then(() => {
+      console.log('✅ Fuse.js chunk warmed and cached')
+    }).catch(error => {
+      console.error('❌ Failed to warm Fuse.js chunk:', error)
+    })
+  }
+  return fuseWarmPromise
+}
 
 interface AuthContextType {
   user: User | null
@@ -33,6 +58,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false)
       }
     )
+
+    // Register service worker for offline support
+    registerServiceWorker().catch(error => {
+      console.error('Service worker registration failed:', error)
+    })
+
+    // Warm Fuse.js chunk as early as possible after hydration
+    console.log('🚀 Auth provider initializing, warming Fuse.js...')
+    warmFuseChunk()
 
     return () => subscription.unsubscribe()
   }, [supabase])

@@ -1,43 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { createClient } from '@/lib/supabase-browser'
 import { Search } from 'lucide-react'
 import { highlightPartialMatches } from '@/utils/searchHighlight'
-
-interface Memory {
-    id: string
-    content: string
-    memory_date: string
-    url?: string
-    created_at: string
-    tags: Array<{
-        key: string
-        value: string
-    }>
-}
-
-interface SearchResult {
-    memories: Memory[]
-    loading: boolean
-    error: string | null
-}
-
-interface RawMemoryData {
-    id: string
-    content: string
-    memory_date: string
-    url?: string
-    created_at: string
-    memory_tag: {
-        tag_values: {
-            text: string
-            tag_keys: {
-                name: string
-            }
-        }
-    }[] | null
-}
+import { SearchResult } from '@/types/memory'
+import { useNetwork } from '@/providers/network-provider'
+import { OnlineSearchService } from '@/lib/search-service'
+import { searchOfflineMemories } from '@/lib/offline-search'
 
 export function MemorySearch() {
     const [query, setQuery] = useState('')
@@ -47,8 +16,7 @@ export function MemorySearch() {
         error: null
     })
     const [debouncedQuery, setDebouncedQuery] = useState('')
-
-    const supabase = createClient()
+    const { isOnline } = useNetwork()
 
     // Debounce search query (500ms as per docs)
     useEffect(() => {
@@ -59,7 +27,7 @@ export function MemorySearch() {
         return () => clearTimeout(timer)
     }, [query])
 
-    // Search function using direct Supabase queries
+    // Search function using abstracted search service
     const searchMemories = useCallback(async (searchQuery: string) => {
         if (!searchQuery.trim()) {
             setResult({ memories: [], loading: false, error: null })
@@ -69,88 +37,13 @@ export function MemorySearch() {
         setResult(prev => ({ ...prev, loading: true, error: null }))
 
         try {
-            // First, get all memories with their tags
-            const query = supabase
-                .from('memories')
-                .select(`
-                    id,
-                    content,
-                    memory_date,
-                    url,
-                    created_at,
-                    memory_tag!left(
-                        tag_values(
-                            text,
-                            tag_keys(
-                                name
-                            )
-                        )
-                    )
-                `)
-                .order('memory_date', { ascending: false })
-                .limit(50) // Get more initially, filter client-side
-
-            const { data: allMemories, error } = await query
-
-            if (error) {
-                console.error('Search error:', error)
-                setResult({ 
-                    memories: [], 
-                    loading: false, 
-                    error: 'Failed to search memories' 
-                })
-                return
-            }
-
-            // Filter client-side for content and tag matches
-            const filteredMemories = (allMemories as unknown as RawMemoryData[] || []).filter((memory) => {
-                const searchLower = searchQuery.toLowerCase()
-                
-                // Check content
-                if (memory.content.toLowerCase().includes(searchLower)) {
-                    return true
-                }
-                
-                // Check tags
-                if (memory.memory_tag && memory.memory_tag.length > 0) {
-                    return memory.memory_tag.some((mt) => {
-                        if (!mt.tag_values) return false
-                        
-                        // Check tag value
-                        if (mt.tag_values.text.toLowerCase().includes(searchLower)) {
-                            return true
-                        }
-                        
-                        // Check tag key  
-                        if (mt.tag_values.tag_keys && 
-                            mt.tag_values.tag_keys.name.toLowerCase().includes(searchLower)) {
-                            return true
-                        }
-                        
-                        return false
-                    })
-                }
-                
-                return false
-            }).slice(0, 20) // Limit final results
-
-            // Transform data to flatten tags
-            const transformedMemories: Memory[] = filteredMemories.map((memory) => ({
-                id: memory.id,
-                content: memory.content,
-                memory_date: memory.memory_date,
-                url: memory.url,
-                created_at: memory.created_at,
-                tags: (memory.memory_tag || [])
-                    .filter((mt) => mt.tag_values && mt.tag_values.tag_keys)
-                    .map((mt) => ({
-                        key: mt.tag_values.tag_keys.name,
-                        value: mt.tag_values.text
-                    }))
-            }))
+            // Use direct function calls to avoid any dynamic loading
+            const memories = isOnline 
+                ? await new OnlineSearchService().searchMemories(searchQuery)
+                : await searchOfflineMemories(searchQuery)
 
             setResult({ 
-                memories: transformedMemories, 
+                memories, 
                 loading: false, 
                 error: null 
             })
@@ -160,10 +53,10 @@ export function MemorySearch() {
             setResult({ 
                 memories: [], 
                 loading: false, 
-                error: 'An error occurred while searching' 
+                error: error instanceof Error ? error.message : 'An error occurred while searching'
             })
         }
-    }, [supabase])
+    }, [isOnline])
 
     // Trigger search when debounced query changes
     useEffect(() => {
@@ -309,9 +202,16 @@ export function MemorySearch() {
 
                 {/* Helpful prompt when no query */}
                 {!query && (
-                    <p className="text-sm text-gray-500 text-center">
-                        Try searching for people, places, events, or tags like &quot;people&quot;, &quot;feeling&quot;, or &quot;excited&quot;
-                    </p>
+                    <div className="text-center">
+                        <p className="text-sm text-gray-500">
+                            Try searching for people, places, events, or tags like &quot;people&quot;, &quot;feeling&quot;, or &quot;excited&quot;
+                        </p>
+                        {!isOnline && (
+                            <p className="text-xs text-orange-600 mt-2">
+                                📱 Searching offline cached memories
+                            </p>
+                        )}
+                    </div>
                 )}
             </div>
         </div>

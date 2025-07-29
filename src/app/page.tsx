@@ -3,6 +3,7 @@
 import { useAuth } from '@/providers/auth-provider'
 import { UserMenu } from '@/components/user-menu'
 import { MemorySearch } from '@/components/memory-search'
+import { SyncStatus } from '@/components/sync-status'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -36,7 +37,10 @@ export default function Home() {
                         <div className="flex items-center">
                             <h1 className="text-xl font-semibold text-gray-900">InstaMem</h1>
                         </div>
-                        <UserMenu />
+                        <div className="flex items-center gap-4">
+                            <SyncStatus />
+                            <UserMenu />
+                        </div>
                     </div>
                 </div>
             </header>

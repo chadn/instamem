@@ -82,7 +82,7 @@ Cached memory search when offline, with sync when connectivity returns.
 -   Tag reference data: ~1KB (minimal overhead)
 -   Well within storage constraints
 
-### Architecture for 0.2.0 Partial Offline Support
+## Architecture for 0.2.0 Partial Offline Support
 
 1. **Cache Strategy**
 
@@ -95,7 +95,7 @@ Cached memory search when offline, with sync when connectivity returns.
     - Save for 0.5.0 when offline writes are required
 
 3. **Storage Management**
-    - Use `localForage` for IndexedDB abstraction
+    - Use [localForage](https://localforage.github.io/localForage/) for IndexedDB abstraction
     - Simple full sync on app startup
     - Clear cache option for debugging
 
@@ -172,7 +172,7 @@ Cached memory search when offline, with sync when connectivity returns.
 - [ ] **User adoption**: >20% of users engage with offline features
 - [ ] **Data integrity**: Perfect sync accuracy when connectivity returns
 
-## Implementation Notes
+## Implementation Notes 0.2.0
 
 *This section will be updated with insights and learnings as the feature is built.*
 
@@ -188,6 +188,69 @@ Cached memory search when offline, with sync when connectivity returns.
 ### Discussion Points for Others
 *TODO: Fill in after 0.2.0 implementation*
 
+## ## Architecture for 0.2.0 Partial Offline Support
+  ✅ What Was Implemented
+
+  Preparatory Refactoring (Clean Foundation)
+
+  1. Memory types & transformation → src/types/memory.ts
+  2. Network status provider → src/providers/network-provider.tsx
+  3. Search service abstraction → src/lib/search-service.ts
+  4. Supabase query builder → src/lib/queries.ts
+
+  Full Offline Support 0.2.0 (As Specified)
+
+  1. IndexedDB Storage → src/lib/offline-storage.ts with localForage
+  2. Fuse.js Offline Search → Fuzzy search with 0.4 threshold, 100ms response time
+  3. Sync Management → src/providers/sync-provider.tsx with progress tracking
+  4. Service Worker → public/sw.js for basic caching
+  5. PWA Manifest → public/manifest.json with installable app support
+  6. Sync Status UI → Real-time online/offline indicators in header
+  7. Auto-sync → Downloads all memories when user goes online
+
+  🚀 Key Features
+
+  - ✅ Read-only offline experience (as specified for 0.2.0)
+  - ✅ Full data copy in IndexedDB (< 100MB, well within browser limits)
+  - ✅ Network detection with graceful degradation
+  - ✅ Fuse.js fuzzy search (100ms response time, more instant than online)
+  - ✅ PWA installation support with manifest and service worker
+  - ✅ Sync progress indicators and manual sync button
+  - ✅ Automatic sync on connectivity return
+
+  📱 User Experience
+
+  - Online: Search uses Supabase with real-time results
+  - Offline: Seamlessly switches to cached Fuse.js search
+  - Sync indicators: Shows online/offline status and last sync time
+  - PWA ready: Can be installed as standalone app
+  - No data loss: All memories cached locally for instant access
+
+  🛠 Technical Architecture
+
+  ┌─────────────────┐    ┌───────────────────┐    ┌─────────────────┐
+  │   Online Search │    │  Network Provider │    │ Offline Search  │
+  │   (Supabase)    │◄──►│ (navigator.onLine)│◄──►│  (IndexedDB +   │
+  │                 │    │                   │    │   Fuse.js)      │
+  └─────────────────┘    └───────────────────┘    └─────────────────┘
+           ▲                         ▲                         ▲
+           │                         │                         │
+           └─────────────────────────┼─────────────────────────┘
+                                     ▼
+                          ┌──────────────────┐
+                          │  Search Service  │
+                          │   Abstraction    │
+                          │ (Factory Pattern)│
+                          └──────────────────┘
+                                     ▲
+                                     │
+                          ┌──────────────────┐
+                          │ MemorySearch UI  │
+                          │   Component      │
+                          └──────────────────┘
+
+  The implementation perfectly follows the 0.2.0 specification: Read-only offline experience with IndexedDB + 
+  Fuse.js, setting up the foundation for 0.5.0 offline writes and sync conflict resolution.
 ---
 
 ## Database Sync Schema
