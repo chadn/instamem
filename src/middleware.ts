@@ -34,6 +34,7 @@ export async function middleware(request: NextRequest) {
     if (
         !user &&
         request.nextUrl.pathname !== '/login' &&
+        request.nextUrl.pathname !== '/login-email' &&
         request.nextUrl.pathname !== '/' &&
         request.nextUrl.pathname !== '/auth/callback'
     ) {
@@ -42,7 +43,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    if (user && request.nextUrl.pathname === '/login') {
+    if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/login-email')) {
         const url = request.nextUrl.clone()
         url.pathname = '/'
         return NextResponse.redirect(url)

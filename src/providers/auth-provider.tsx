@@ -33,6 +33,7 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   signIn: (provider: 'google' | 'github') => Promise<void>
+  signInWithEmail: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -58,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false)
       }
     )
+
 
     // Register service worker for offline support
     registerServiceWorker().catch(error => {
@@ -91,6 +93,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const signInWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    
+    if (error) {
+      throw error
+    }
+    
+    // User state will be updated via onAuthStateChange
+  }
+
   const signOut = async () => {
     try {
       await supabase.auth.signOut()
@@ -106,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signInWithEmail, signOut }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,0 +1,119 @@
+import { defineConfig, devices } from '@playwright/test'
+
+/**
+ * See https://playwright.dev/docs/test-configuration.
+ */
+export default defineConfig({
+    testDir: '../e2e/tests',
+    outputDir: '../e2e/artifacts/test-results',
+    /* Run tests in files in parallel */
+    fullyParallel: true,
+    /* Fail the build on CI if you accidentally left test.only in the source code. */
+    forbidOnly: !!process.env.CI,
+    /* Retry on CI only */
+    retries: process.env.CI ? 2 : 0,
+    /* Opt out of parallel tests on CI. */
+    workers: process.env.CI ? 1 : undefined,
+    /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+    reporter: [['html', { outputFolder: '../e2e/artifacts/playwright-report' }]],
+    /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+    use: {
+        /* Base URL to use in actions like `await page.goto('/')`. */
+        baseURL: 'http://localhost:3000',
+
+        /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+        trace: 'on-first-retry',
+
+        /* Screenshot on failure */
+        screenshot: 'only-on-failure',
+
+        /* Use headless mode by default (bundled browsers) */
+        headless: true,
+
+        /* Consider increasing timeout for slower operations */
+        actionTimeout: 1000,
+        navigationTimeout: 3000,
+    },
+
+    /* Set up environment variables for testing */
+    globalSetup: require.resolve('./global-setup.ts'),
+
+    /* Configure projects for major browsers - optimized for macOS */
+    projects: [
+        {
+            name: 'chromium',
+            use: {
+                ...devices['Desktop Chrome'],
+                // Ensure we're using bundled Chromium (no channel specified)
+                headless: true,
+                // Optimize for macOS
+                launchOptions: {
+                    args: [
+                        '--disable-web-security',
+                        '--disable-features=TranslateUI',
+                        '--disable-ipc-flooding-protection',
+                        '--disable-background-timer-throttling',
+                        '--disable-backgrounding-occluded-windows',
+                        '--disable-renderer-backgrounding',
+                    ],
+                },
+            },
+        },
+
+        // Only run Firefox and WebKit when explicitly requested
+        // This speeds up development while still supporting cross-browser testing
+        ...(process.env.PLAYWRIGHT_BROWSERS?.includes('firefox')
+            ? [
+                  {
+                      name: 'firefox',
+                      use: {
+                          ...devices['Desktop Firefox'],
+                          headless: true,
+                      },
+                  },
+              ]
+            : []),
+
+        ...(process.env.PLAYWRIGHT_BROWSERS?.includes('webkit')
+            ? [
+                  {
+                      name: 'webkit',
+                      use: {
+                          ...devices['Desktop Safari'],
+                          headless: true,
+                      },
+                  },
+              ]
+            : []),
+
+        /* Test against mobile viewports when requested */
+        ...(process.env.PLAYWRIGHT_BROWSERS?.includes('mobile')
+            ? [
+                  {
+                      name: 'Mobile Chrome',
+                      use: {
+                          ...devices['Pixel 5'],
+                          headless: true,
+                      },
+                  },
+                  {
+                      name: 'Mobile Safari',
+                      use: {
+                          ...devices['iPhone 12'],
+                          headless: true,
+                      },
+                  },
+              ]
+            : []),
+    ],
+
+    /* Run your local dev server before starting the tests */
+    webServer: {
+        command: 'npm run dev',
+        url: 'http://localhost:3000',
+        reuseExistingServer: !process.env.CI,
+        stdout: 'ignore',
+        stderr: 'pipe',
+        timeout: 120000, // 2 minutes for Next.js to start
+    },
+})

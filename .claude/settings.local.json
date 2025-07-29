@@ -16,7 +16,11 @@
       "Bash(find:*)",
       "Bash(rmdir:*)",
       "Bash(rm:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(true)",
+      "Bash(npm test:*)",
+      "Bash(node:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

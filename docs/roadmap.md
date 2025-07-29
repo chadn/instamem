@@ -10,7 +10,7 @@
 | Basic UI               | ✅    |       |       |       | P0       |
 | Offline Support        |       | 🟡    | 📋    |       | P1       |
 | Memory Export          |       | 📋    |       |       | P2       |
-| Testing Infrastructure |       | 📋    | 📋    |       | P1       |
+| Testing Infrastructure |       | 🟡    | 📋    |       | P1       |
 | Tag Management         |       | 📋    |       |       | P1       |
 | instamem-server repo   |       |       | 📋    |       | P2       |
 | Semantic Search        |       |       | 💭    |       | P2       |
@@ -101,8 +101,7 @@
 
 ### Testing Infrastructure
 
--   📋 **0.2.0:** Minimum to test data and core functionality
--   📋 **1.0.0:** Jest, React Testing Library, component and integration tests
+-   📋 **0.2.0:** Minimum to test data and core functionality - see [tests](tests.md) for details.
 -   **Learning:** Testing patterns, mocking strategies, CI/CD integration
 
 ### Performance Monitoring
@@ -124,3 +123,4 @@
 
 -   💭 **2.0.0:** REST API for external integrations and mobile apps
 -   **Learning:** API design, authentication, rate limiting, documentation
+

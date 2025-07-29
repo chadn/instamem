@@ -23,6 +23,122 @@ else
     exit 1
 fi
 
+# Function to generate a random password
+generate_password() {
+    openssl rand -base64 32 | tr -d "=+/" | cut -c1-16
+}
+
+# Function to update or add environment variable in .env.local
+update_env_var() {
+    local var_name="$1"
+    local var_value="$2"
+    local env_file=".env.local"
+    
+    if grep -q "^${var_name}=" "$env_file"; then
+        # Variable exists, update it
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            sed -i '' "s/^${var_name}=.*/${var_name}=${var_value}/" "$env_file"
+        else
+            # Linux
+            sed -i "s/^${var_name}=.*/${var_name}=${var_value}/" "$env_file"
+        fi
+    else
+        # Variable doesn't exist, add it
+        echo "${var_name}=${var_value}" >> "$env_file"
+    fi
+}
+
+# Function to create test user SQL file and execute it
+create_test_user_sql() {
+    local email="$1"
+    local password="$2"
+    local temp_sql_file="$(mktemp)"
+    
+    # Generate UUID for the user
+    local user_id=$(uuidgen | tr '[:upper:]' '[:lower:]')
+    
+    # Create SQL to insert test user into auth.users table
+    cat > "$temp_sql_file" << EOF
+-- Create test user for E2E testing
+-- This inserts directly into Supabase's auth schema
+
+-- First, check if user already exists and delete if needed
+DELETE FROM auth.users WHERE email = '$email';
+
+-- Insert the test user
+INSERT INTO auth.users (
+    id,
+    instance_id,
+    aud,
+    role,
+    email,
+    encrypted_password,
+    email_confirmed_at,
+    recovery_sent_at,
+    last_sign_in_at,
+    raw_app_meta_data,
+    raw_user_meta_data,
+    created_at,
+    updated_at,
+    confirmation_token,
+    email_change,
+    email_change_token_new,
+    recovery_token
+) VALUES (
+    '$user_id'::uuid,
+    '00000000-0000-0000-0000-000000000000'::uuid,
+    'authenticated',
+    'authenticated',
+    '$email',
+    crypt('$password', gen_salt('bf')),
+    NOW(),
+    NOW(),
+    NOW(),
+    '{"provider": "email", "providers": ["email"]}',
+    '{"full_name": "Test User"}',
+    NOW(),
+    NOW(),
+    '',
+    '',
+    '',
+    ''
+);
+
+-- Insert identity record
+INSERT INTO auth.identities (
+    id,
+    user_id,
+    identity_data,
+    provider,
+    last_sign_in_at,
+    created_at,
+    updated_at
+) VALUES (
+    '$user_id'::uuid,
+    '$user_id'::uuid,
+    '{"sub": "$user_id", "email": "$email"}',
+    'email',
+    NOW(),
+    NOW(),
+    NOW()
+) ON CONFLICT (provider, id) DO NOTHING;
+
+-- Show confirmation
+SELECT 'Test user created successfully:' as status;
+SELECT id, email, email_confirmed_at FROM auth.users WHERE email = '$email';
+EOF
+
+    # Execute the SQL file
+    if execute_sql_file "$temp_sql_file" "Creating test user in auth.users table"; then
+        rm -f "$temp_sql_file"
+        return 0
+    else
+        rm -f "$temp_sql_file"
+        return 1
+    fi
+}
+
 # Check required variables
 if [ -z "$SUPABASE_PROJECT_ID" ] || [ -z "$SUPABASE_PROJECT_PASSWD" ]; then
     echo -e "${RED}❌ Missing required environment variables:${NC}"
@@ -156,21 +272,50 @@ case "$1" in
         echo -e "${YELLOW}🌱 Seeding database...${NC}"
         execute_sql_file "db/seed-data.sql" "Inserting initial data"
         ;;
+
+    "seed-test-user")
+        echo -e "${YELLOW}👤 Creating test user for E2E tests...${NC}"
+        
+        # Generate test user credentials
+        TEST_USER_EMAIL="test@instamem.local"
+        TEST_USER_PASSWORD=$(generate_password)
+        
+        echo -e "${BLUE}📝 Generated credentials:${NC}"
+        echo "   Email: $TEST_USER_EMAIL"
+        echo "   Password: $TEST_USER_PASSWORD"
+        
+        # Store password in .env.local
+        echo -e "${BLUE}💾 Updating .env.local...${NC}"
+        update_env_var "TEST_USER_EMAIL" "$TEST_USER_EMAIL"
+        update_env_var "TEST_USER_PASSWORD" "$TEST_USER_PASSWORD"
+        
+        # Create the user via SQL
+        echo -e "${BLUE}🔐 Creating user in Supabase auth schema...${NC}"
+        if create_test_user_sql "$TEST_USER_EMAIL" "$TEST_USER_PASSWORD"; then
+            echo -e "${GREEN}🎉 Test user setup completed successfully!${NC}"
+            echo -e "${BLUE}💡 You can now run E2E tests with cached authentication${NC}"
+        else
+            echo -e "${RED}❌ Failed to create test user${NC}"
+            exit 1
+        fi
+        ;;
         
     *)
         echo -e "${BLUE}InstaMem Database Management${NC}"
         echo ""
-        echo "Usage: $0 {setup|reset|check|seed}"
+        echo "Usage: $0 {setup|reset|check|seed|seed-test-user}"
         echo ""
         echo "Commands:"
-        echo "  setup  - Create database schema and seed initial data"
-        echo "  reset  - Drop all tables and reset database"
-        echo "  check  - Check database connection and schema status"
-        echo "  seed   - Insert initial data only"
+        echo "  setup          - Create database schema and seed initial data"
+        echo "  reset          - Drop all tables and reset database"
+        echo "  check          - Check database connection and schema status"
+        echo "  seed           - Insert initial data only"
+        echo "  seed-test-user - Create test user for E2E testing with cached auth"
         echo ""
         echo "Examples:"
         echo "  $0 setup"
         echo "  $0 check"
         echo "  $0 reset"
+        echo "  $0 seed-test-user"
         ;;
 esac

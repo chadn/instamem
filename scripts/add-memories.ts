@@ -226,7 +226,7 @@ async function listInfo(): Promise<void> {
         const users = await getUsers()
         console.log(`\n👥 Total users in database: ${users.length}`)
         users.forEach(user => {
-            console.log(`${user.name} (${user.email}) via ${user.provider} - UUID: ${user.uuid}`)
+            console.log(`${user.uuid} ${user.name} ${user.email} via ${user.provider}`)
         })
 
         console.log('\n📋 Existing tags in database:\n')

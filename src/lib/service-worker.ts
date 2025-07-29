@@ -9,6 +9,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     return null
   }
 
+
   try {
     console.log('📦 Registering Service Worker...')
     

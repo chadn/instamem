@@ -70,6 +70,10 @@ WIP - see [Roadmap](docs/roadmap.md)
    - note supabase project id
    - note supabase project password
    - copy your anon public key https://supabase.com/dashboard/project/_/settings/api-keys
+   - Enable Email Provider (login by email+passwd).  
+     Make sure "Confirm email" and other switches are off. 
+     Then click "Save" in bottom right.
+     https://supabase.com/dashboard/project/_/auth/providers
    - In https://supabase.com/dashboard/project/_/auth/url-configuration
      make sure site url is  http://localhost:3000/
      make sure Redirect URLs includes  http://localhost:3000/auth/callback
@@ -103,6 +107,7 @@ WIP - see [Roadmap](docs/roadmap.md)
    npm run db check   # Check database status
    npm run db reset   # Reset database (drops all tables)
    npm run db seed    # Seed data only
+   npm run db seed-test-user # needed to run auth tests
    ```
 
 5. **Configure OAuth providers in Supabase:**
