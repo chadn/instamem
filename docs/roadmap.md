@@ -8,7 +8,7 @@
 | Memory Search          | ✅    | 📋    |       |       | P0       |
 | Add Memories           | ✅    | 📋    |       |       | P0       |
 | Basic UI               | ✅    |       |       |       | P0       |
-| Offline Support        |       | 🟡    | 📋    |       | P1       |
+| Offline Support        |       | ✅    | 📋    |       | P1       |
 | Memory Export          |       | 📋    |       |       | P2       |
 | Testing Infrastructure |       | 🟡    | 📋    |       | P1       |
 | Tag Management         |       | 📋    |       |       | P1       |
@@ -64,9 +64,9 @@
 
 ### [Offline Support](features/offline-support.md)
 
--   📋 Read-only cached memories, basic PWA
--   📋 Offline writes with sync queue
--   📋 Multi-device sync with conflict resolution
+-   ✅ **0.2.0:** Read-only cached memories, basic PWA, offline search with Fuse.js
+-   📋 **0.5.0:** Offline writes with sync queue
+-   📋 **1.0.0:** Multi-device sync with conflict resolution
 -   **Learning:** 0.2.0=PWA/IndexedDB basics, 1.0.0=Sync patterns, 2.0.0=CRDTs
 
 ### Memory Export
@@ -101,7 +101,7 @@
 
 ### Testing Infrastructure
 
--   📋 **0.2.0:** Minimum to test data and core functionality - see [tests](tests.md) for details.
+-   📋 **0.2.0:** Minimum to test data and core functionality - see [tests](tests.md) for strategy.
 -   **Learning:** Testing patterns, mocking strategies, CI/CD integration
 
 ### Performance Monitoring

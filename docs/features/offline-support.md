@@ -11,9 +11,10 @@ Cached memory search when offline, with sync when connectivity returns.
 ## Learning Goals
 
 -   [Service Workers](https://caniuse.com/serviceworkers) patterns for offline-first apps
--   IndexedDB for structured data storage
+-   IndexedDB for structured data storage (abstracted away by using localforage)
 -   Background sync for reliable data updates
 -   How much data can browsers store locally (appears to be 500MB-1GB)
+-   PWA vs Native Apps?
 
 ## Implementation Ideas (0.2.0) Partial Offline Support
 
@@ -63,6 +64,27 @@ Cached memory search when offline, with sync when connectivity returns.
 - **Cache management**: Automatic vs. user-controlled cache clearing?
 
 # Details
+
+## PWA vs Native Apps
+
+A PWA, or Progressive Web App, is a web application that behaves like a native app while running in the browser. It leverages modern web capabilities to offer an app-like experience without requiring installation from app stores.
+
+
+
+PWAs can be turned into Full Native apps using these 2
+- [Capacitor JS](https://capacitorjs.com/) "Capacitor is an open source native runtime for building Web Native apps. Create cross-platform iOS, Android, and Progressive Web Apps with JavaScript, HTML, and CSS"
+- [Ionic](https://ionicframework.com/) "An open source mobile UI toolkit for building modern, high quality cross-platform mobile apps [Android, iOS, Windows] from a single code base in React/Vue/Angular/etc"
+- Ionic and Capacitor - [best for cross platform](https://www.dhiwise.com/post/the-best-progressive-web-app-frameworks), [future, reddit](https://www.reddit.com/r/capacitor/comments/1in4b90/important_announcement_the_future_of_ionics/)
+
+Not recommended
+- [Apache Cordova](https://cordova.apache.org/) is an open-source mobile development framework
+  - Ionic platform is built on top of Cordova, so you get more using Ionic. 
+  - Apache Cordova’s founders Nitobi were purchased by Adobe Systems and have since carried the name of PhoneGap.
+  - "Cordova’s relevance has declined in recent years. Microsoft officially announced in 2020 that it would cease support for Apache Cordova in Visual Studio, encouraging developers to transition to alternative solutions like React Native, Flutter, or Progressive Web Apps (PWAs). While Cordova is still maintained by the open-source community, its ecosystem has slowed, and many developers have moved to mobile frameworks with better performance and support." [src](https://pagepro.co/blog/react-native-vs-ionic-and-cordova-comparison/)
+
+
+
+
 
 ## Storage Capacity Analysis
 
@@ -172,23 +194,31 @@ Cached memory search when offline, with sync when connectivity returns.
 - [ ] **User adoption**: >20% of users engage with offline features
 - [ ] **Data integrity**: Perfect sync accuracy when connectivity returns
 
-## Implementation Notes 0.2.0
+## 0.2.0 Implementation Status: ✅ COMPLETE
 
-*This section will be updated with insights and learnings as the feature is built.*
+**Core Features Delivered:**
+- ✅ Read-only offline experience with cached memories
+- ✅ Fuse.js fuzzy search (0.4 threshold, <100ms response time)  
+- ✅ IndexedDB storage via localForage abstraction
+- ✅ Network detection with automatic online/offline switching
+- ✅ PWA manifest with install support
+- ✅ Service worker for static asset caching
+- ✅ Sync status UI with manual sync button
+- ✅ Comprehensive E2E test coverage (offline search verified)
 
-### What I Learned
-*TODO: Fill in after 0.2.0 implementation*
+**What Works Well:**
+- Network detection is instant and reliable
+- Fuse.js search feels faster than online search
+- LocalForage handles IndexedDB complexity gracefully
+- PWA installs cleanly on mobile and desktop
+- Sync provider integrates seamlessly with existing UI
 
-### What Worked Well  
-*TODO: Fill in after 0.2.0 implementation*
+**Technical Insights:**
+- Full data copy approach works perfectly (<100MB for typical usage)
+- Dynamic Fuse.js imports reduce initial bundle size
+- Simple sync strategy sufficient for read-only use case
 
-### What I'd Do Differently
-*TODO: Fill in after 0.2.0 implementation*
-
-### Discussion Points for Others
-*TODO: Fill in after 0.2.0 implementation*
-
-## ## Architecture for 0.2.0 Partial Offline Support
+## Architecture for 0.2.0 Partial Offline Support
   ✅ What Was Implemented
 
   Preparatory Refactoring (Clean Foundation)

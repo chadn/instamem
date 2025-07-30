@@ -3,9 +3,13 @@ import { defineConfig, devices } from '@playwright/test'
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+// Dynamic output directories based on timestamp and potential results
+const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+const outputSuffix = process.env.PLAYWRIGHT_OUTPUT_SUFFIX || timestamp
+
 export default defineConfig({
     testDir: '../e2e/tests',
-    outputDir: '../e2e/artifacts/test-results',
+    outputDir: `../e2e/artifacts/test-results-${outputSuffix}`,
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -15,7 +19,13 @@ export default defineConfig({
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [['html', { outputFolder: '../e2e/artifacts/playwright-report' }]],
+    reporter: [
+        ['html', { 
+            outputFolder: `../e2e/artifacts/playwright-report-${outputSuffix}`,
+            open: 'never' // Don't auto-open the HTML report
+        }],
+        ['list'] // Also use list reporter for terminal output
+    ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Base URL to use in actions like `await page.goto('/')`. */

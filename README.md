@@ -9,6 +9,7 @@ InstaMem is a simple, fast, and personal memory assistant. Just type a word, or 
 -   Instantly search through memories using a single keyword
 -   Find details about people, experiences, career moments, or emotions
 -   Custom tagging system — create your own categories (e.g. person:Alex, place:NYC, feeling:inspired)
+-   **Offline-ready**: Search cached memories without internet connection
 -   Lightning-fast UI designed for effortless, frequent use
 
 📝 Add or Update Memories (Like ChatGPT)

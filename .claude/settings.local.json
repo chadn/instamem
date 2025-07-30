@@ -9,6 +9,7 @@
       "Bash(git mv:*)",
       "Bash(mv:*)",
       "Bash(npm run:*)",
+      "Bash(timeout 10s npm run:*)",
       "Bash(chmod:*)",
       "Bash(./test-sql-connection.sh:*)",
       "Bash(./test-simple-sql.sh:*)",
@@ -20,7 +21,10 @@
       "Bash(true)",
       "Bash(npm test:*)",
       "Bash(node:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "Bash(cp:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

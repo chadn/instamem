@@ -108,8 +108,14 @@ export function MemorySearch() {
                         placeholder="Search memories and tags..."
                         value={query}
                         onChange={(e) => {
-                            // Basic sanitization
-                            const sanitized = e.target.value.replace(/<[^>]*>/g, '').trim()
+                            // Enhanced sanitization for XSS prevention
+                            const sanitized = e.target.value
+                                .replace(/<[^>]*>/g, '') // Remove HTML tags
+                                .replace(/javascript:/gi, '') // Remove javascript: URIs
+                                .replace(/data:/gi, '') // Remove data: URIs  
+                                .replace(/vbscript:/gi, '') // Remove vbscript: URIs
+                                .replace(/on\w+=/gi, '') // Remove event handlers like onclick=
+                                .trim()
                             setQuery(sanitized)
                         }}
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
