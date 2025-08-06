@@ -4,14 +4,15 @@
 
 | Name                   | 0.1.0 | 0.2.0 | 0.5.0 | 1.0.0 | Priority |
 | ---------------------- | ----- | ----- | ----- | ----- | -------- |
-| Authentication         | ✅    | 📋    |       |       | P0       |
+| Authentication         | ✅    |       | 📋    |       | P0       |
 | Memory Search          | ✅    | 📋    |       |       | P0       |
 | Add Memories           | ✅    | 📋    |       |       | P0       |
+| Edit Memories          |       | 📋    |       |       | P1       |
 | Basic UI               | ✅    |       |       |       | P0       |
 | Offline Support        |       | ✅    | 📋    |       | P1       |
-| Memory Export          |       | 📋    |       |       | P2       |
-| Testing Infrastructure |       | 🟡    | 📋    |       | P1       |
-| Tag Management         |       | 📋    |       |       | P1       |
+| Memory Export          |       |       | 📋    |       | P2       |
+| Testing Infrastructure |       | ✅    | 📋    |       | P1       |
+| Tag Management         |       |       | 📋    |       | P1       |
 | instamem-server repo   |       |       | 📋    |       | P2       |
 | Semantic Search        |       |       | 💭    |       | P2       |
 | Multi-device Sync      |       |       |       | 💭    | P2       |
@@ -23,9 +24,9 @@
 | API Access             |       |       |       | 💭    | P2       |
 
 ✅ Done  
-🟡 IN PROGRESS 
-📋 TODO 
-💭 CONCEPT 
+🟡 IN PROGRESS
+📋 TODO
+💭 CONCEPT
 
 **Versions:**
 
@@ -35,7 +36,7 @@
 -   **1.0.0 (Advanced):** Sophisticated features, full offline
 -   **2.0.0 (Production):** Enterprise-ready, multi-device, security
 
-**Priority:** P0 = Must have, P1 = Important Sooner, P2 = Important, P3 = Nice to have 
+**Priority:** P0 = Must have, P1 = Important Sooner, P2 = Important, P3 = Nice to have
 **Status:** ✅ Built, 🟡 In Progress, 📋 Todo, 💭 Concept
 
 ## Feature Details
@@ -54,7 +55,7 @@
 ### Add Memories
 
 -   📋 **0.1.0:** Simple CLI-based memory creation (direct database insert)
--   📋 **0.2.0:** CLI-based Edit/Delete memory
+-   📋 **0.2.0:** CLI-based Edit/Delete memory, UI based Add/edit/delete memory.
 -   📋 **0.5.0** AI-powered natural language parsing with LangChain, part of instamem-server repo
 
 ### Basic UI
@@ -71,7 +72,7 @@
 
 ### Memory Export
 
--   📋 **0.2.0:** JSON/CSV export of user memories
+-   📋 **0.5.0:** JSON/CSV export of user memories
 -   **Learning:** Data formats, file handling in browser
 
 ### Semantic Search
@@ -86,6 +87,7 @@
 
 ### Tag Management
 
+-   📋 Tags shown in search results. Ex: search for "per" will show all tags starting with "person:"
 -   📋 Tag browsing interface, creation, editing, usage statistics
 -   **Learning:** Data relationships, UI for hierarchical data, search UX
 
