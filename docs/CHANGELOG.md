@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2025-??
 
+### Added
+
+-   Offline support with cached memories and Fuse.js search
+-   PWA manifest and service worker for app installation
+-   Network detection with automatic online/offline switching
+-   IndexedDB storage via localForage abstraction
+-   Search term highlighting in results
+-   CLI tool to list/add/edit/delete memories
+
 ### In Progress
 
--   Offline local storage use
 -   Testing infrastructure
+-   Tag Suggestions
 
 ## [0.1.0] - 2025-07-25
 

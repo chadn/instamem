@@ -188,23 +188,25 @@ Not recommended
 
 ## Success Criteria
 
-- [ ] **Performance**: Search responds within 200ms on cached data
-- [ ] **Reliability**: <5% cache corruption/eviction issues across browsers
-- [ ] **Compatibility**: Graceful degradation on Safari iOS 50MB limit
-- [ ] **User adoption**: >20% of users engage with offline features
-- [ ] **Data integrity**: Perfect sync accuracy when connectivity returns
+*Status tracked in [Feature Status Table](../roadmap.md#feature-status-table)*
 
-## 0.2.0 Implementation Status: ✅ COMPLETE
+- **Performance**: Search responds within 200ms on cached data
+- **Reliability**: <5% cache corruption/eviction issues across browsers
+- **Compatibility**: Graceful degradation on Safari iOS 50MB limit
+- **User adoption**: >20% of users engage with offline features
+- **Data integrity**: Perfect sync accuracy when connectivity returns
+
+## 0.2.0 Implementation Status
 
 **Core Features Delivered:**
-- ✅ Read-only offline experience with cached memories
-- ✅ Fuse.js fuzzy search (0.4 threshold, <100ms response time)  
-- ✅ IndexedDB storage via localForage abstraction
-- ✅ Network detection with automatic online/offline switching
-- ✅ PWA manifest with install support
-- ✅ Service worker for static asset caching
-- ✅ Sync status UI with manual sync button
-- ✅ Comprehensive E2E test coverage (offline search verified)
+- Read-only offline experience with cached memories
+- Fuse.js fuzzy search (0.4 threshold, <100ms response time)  
+- IndexedDB storage via localForage abstraction
+- Network detection with automatic online/offline switching
+- PWA manifest with install support
+- Service worker for static asset caching
+- Sync status UI with manual sync button
+- Comprehensive E2E test coverage (offline search verified)
 
 **What Works Well:**
 - Network detection is instant and reliable
@@ -219,7 +221,7 @@ Not recommended
 - Simple sync strategy sufficient for read-only use case
 
 ## Architecture for 0.2.0 Partial Offline Support
-  ✅ What Was Implemented
+  What Was Implemented
 
   Preparatory Refactoring (Clean Foundation)
 
@@ -240,13 +242,13 @@ Not recommended
 
   🚀 Key Features
 
-  - ✅ Read-only offline experience (as specified for 0.2.0)
-  - ✅ Full data copy in IndexedDB (< 100MB, well within browser limits)
-  - ✅ Network detection with graceful degradation
-  - ✅ Fuse.js fuzzy search (100ms response time, more instant than online)
-  - ✅ PWA installation support with manifest and service worker
-  - ✅ Sync progress indicators and manual sync button
-  - ✅ Automatic sync on connectivity return
+  - Read-only offline experience (as specified for 0.2.0)
+  - Full data copy in IndexedDB (< 100MB, well within browser limits)
+  - Network detection with graceful degradation
+  - Fuse.js fuzzy search (100ms response time, more instant than online)
+  - PWA installation support with manifest and service worker
+  - Sync progress indicators and manual sync button
+  - Automatic sync on connectivity return
 
   📱 User Experience
 

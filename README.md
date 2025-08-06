@@ -29,32 +29,7 @@ InstaMem is a simple, fast, and personal memory assistant. Just type a word, or 
 
 ## Architecture
 
-
-```
-                   🧠 InstaMem System Architecture
-
-┌───────────────────────────┐                    ┌──────────────────────────┐
-│       React Frontend      │ ───── Auth ──────▶ │      Supabase DB         │
-│     (Runs in Browser)     │ ◀───── JWT ─────── │ (Postgres + Auth + RLS)  │
-│      JWT used for auth    │                    │                          │
-│     in reads and updates  │ ────── read ─────▶ │                          │
-└────────────┬──────────────┘                    └────────┬────┬────────────┘
-             │  update                                    ▲    ▲
-             ▼                                            │    │
-     ┌─────────────────────────────┐                      │    └ CLI for
-     │    LangChain API Server     │                      │     db setup,
-     │ (Python FastAPI backend)    │                      │    add-memories
-     └────────┬─────────┬──────────┘                      │
-              │         │                                 │
-              │         └──▶ Second, Update DB via Tool ──┘
-              │ First,
-              │ Parse Text to Structured Data via Tool Function
-              │      ┌──────────────────────────────┐
-              └─────▶│     OpenAI/Gemini/etc API    │
-                     │   (Calls Tool Functions to   │
-                     │      update Supabase DB)     │
-                     └──────────────────────────────┘
-```
+*See [Architecture Documentation](docs/technical/architecture.md) for detailed system design*
 
 ## Status
 
@@ -149,6 +124,8 @@ npm run add-memories # CLI tool to add memories
 ```
 
 ## Architecture
+
+*See [Architecture Documentation](docs/technical/architecture.md) for detailed system design*
 
 This repository contains the React frontend. The backend (InstaMem server) will be a separate Python repository using LangChain for AI-powered memory processing.
 

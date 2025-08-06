@@ -31,11 +31,13 @@ Essential foundation for any personal data application. Without proper authentic
 - GitHub OAuth app configuration
 
 ## Success Criteria
-- [x] Users can sign in with Google OAuth
-- [x] Users can sign in with GitHub OAuth  
-- [x] Authentication state persists across browser sessions
-- [x] Protected routes redirect unauthenticated users to login
-- [x] RLS policies prevent cross-user data access
+*Status tracked in [Feature Status Table](../roadmap.md#feature-status-table)*
+
+- Users can sign in with Google OAuth
+- Users can sign in with GitHub OAuth  
+- Authentication state persists across browser sessions
+- Protected routes redirect unauthenticated users to login
+- RLS policies prevent cross-user data access
 
 ---
 

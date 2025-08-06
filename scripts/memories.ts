@@ -20,23 +20,24 @@ USAGE:
     npm run memories <command> [options]
 
 COMMANDS:
-    users                         List all users
-    list [user-email]             List memories (optionally filter by user)
-    search <query>                Search memories across all users
-    add <file.json>               Add memories from JSON file
-    delete <memory-id>            Delete memory by ID (interactive confirmation)
-    edit <memory-id>              Edit memory content and tags (interactive)
+    users                      List all users
+    list [user-email|uuid]     List memories (optionally filter by user email or UUID)
+    search <query>             Search memories across all users
+    add <file.json>            Add memories from JSON file
+    delete <memory-id>         Delete memory by ID (interactive confirmation)
+    edit <memory-id>           Edit memory content and tags (interactive)
 
 EXAMPLES:
     npm run memories users
     npm run memories list test@instamem.local
+    npm run memories list 550e8400-e29b-41d4-a716-446655440000
     npm run memories search "coffee"
     npm run memories add my-memories.json
     npm run memories delete abc123-def456-789
     npm run memories edit abc123-def456-789
 
 JSON FORMAT for adding memories:
-{
+[{
     "uuid": "user-uuid-here",
     "add-memories": [
         {
@@ -46,23 +47,13 @@ JSON FORMAT for adding memories:
             "tags": ["person:alice", "feeling:happy"]
         }
     ]
-}
+}]
 `
 
 // Types
 interface Tag {
     key: string
     value: string
-}
-
-interface UserInfo {
-    id: string
-    email: string
-    user_metadata: {
-        name?: string
-        email?: string
-        provider?: string
-    }
 }
 
 interface MemoryInput {
@@ -75,17 +66,6 @@ interface MemoryInput {
 interface UserMemories {
     uuid: string
     'add-memories': MemoryInput[]
-}
-
-interface Memory {
-    id: string
-    content: string
-    memory_date: string
-    user_id: string
-    url?: string
-    created_at: string
-    updated_at: string
-    tags?: Tag[]
 }
 
 // Initialize Supabase client with service role key for CLI operations
@@ -215,7 +195,7 @@ async function listUsers() {
 }
 
 // List memories for a user
-async function listMemories(userEmail?: string) {
+async function listMemories(userIdentifier?: string) {
     console.log('📚 Fetching memories...')
     
     let query = adminSupabase
@@ -237,18 +217,32 @@ async function listMemories(userEmail?: string) {
         `)
         .order('memory_date', { ascending: false })
     
-    // Filter by user if email provided
-    if (userEmail) {
-        const { data: users } = await adminSupabase.auth.admin.listUsers()
-        const user = users?.users.find(u => u.email === userEmail || (u.user_metadata as any)?.email === userEmail)
+    // Filter by user if identifier provided
+    if (userIdentifier) {
+        let userId: string | undefined
         
-        if (!user) {
-            console.error(`❌ User with email "${userEmail}" not found`)
-            return
+        // Check if it's a UUID (36 characters with dashes in specific positions)
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userIdentifier)
+        
+        if (isUuid) {
+            // It's a UUID, use it directly
+            userId = userIdentifier
+            console.log(`Filtering memories for user UUID: ${userIdentifier}`)
+        } else {
+            // It's an email, look up the user
+            const { data: users } = await adminSupabase.auth.admin.listUsers()
+            const user = users?.users.find(u => u.email === userIdentifier || (u.user_metadata as any)?.email === userIdentifier)
+            
+            if (!user) {
+                console.error(`❌ User with email "${userIdentifier}" not found`)
+                return
+            }
+            
+            userId = user.id
+            console.log(`Filtering memories for user: ${userIdentifier}`)
         }
         
-        query = query.eq('user_id', user.id)
-        console.log(`Filtering memories for user: ${userEmail}`)
+        query = query.eq('user_id', userId)
     }
 
     const { data: memories, error } = await query.limit(50)
@@ -276,6 +270,7 @@ async function listMemories(userEmail?: string) {
         console.log(`   Content: ${memory.content.substring(0, 100)}${memory.content.length > 100 ? '...' : ''}`)
         if (memory.url) console.log(`   URL: ${memory.url}`)
         if (tags.length) console.log(`   Tags: ${formatTags(tags)}`)
+        if (!userIdentifier) console.log(`   User: ${memory.user_id}`)
         console.log('')
     })
 }
@@ -327,59 +322,82 @@ async function addMemoriesFromFile(filePath: string) {
         
         const fullPath = resolve(filePath)
         const fileContent = readFileSync(fullPath, 'utf-8')
-        const data: UserMemories = JSON.parse(fileContent)
+        const rawData = JSON.parse(fileContent)
         
-        if (!data.uuid || !data['add-memories']) {
-            console.error('❌ Invalid JSON format. Expected: { "uuid": "...", "add-memories": [...] }')
+        // Handle both single user object and array of users
+        let usersData: UserMemories[]
+        
+        if (Array.isArray(rawData)) {
+            usersData = rawData
+        } else if (rawData.uuid && rawData['add-memories']) {
+            usersData = [rawData]
+        } else {
+            console.error('❌ Invalid JSON format. Expected:')
+            console.error('Single user: { "uuid": "...", "add-memories": [...] }')
+            console.error('Multiple users: [{ "uuid": "...", "add-memories": [...] }, ...]')
             return
         }
 
-        const memories = data['add-memories']
-        console.log(`Found ${memories.length} memories to add for user ${data.uuid}`)
-
-        let addedCount = 0
+        console.log(`Found ${usersData.length} user(s) with memories to add`)
         
-        for (const memoryInput of memories) {
-            try {
-                const memory = {
-                    user_id: data.uuid,
-                    content: memoryInput.content,
-                    memory_date: parseDate(memoryInput.date).toISOString(),
-                    url: memoryInput.url || null,
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
-                }
-
-                // Insert the memory
-                const { data: insertedMemory, error: memoryError } = await adminSupabase
-                    .from('memories')
-                    .insert(memory)
-                    .select('id')
-                    .single()
-
-                if (memoryError) {
-                    console.error(`❌ Error adding memory: ${memoryError.message}`)
-                    continue
-                }
-
-                // Add tags if provided
-                if (memoryInput.tags && memoryInput.tags.length > 0) {
-                    const tags = parseTagsFromArray(memoryInput.tags)
-                    
-                    for (const tag of tags) {
-                        await addTagToMemory(insertedMemory.id, tag)
-                    }
-                }
-
-                addedCount++
-                console.log(`✅ Added memory: ${memoryInput.content.substring(0, 50)}...`)
-                
-            } catch (error) {
-                console.error(`❌ Error processing memory: ${error}`)
+        let totalAddedCount = 0
+        
+        for (const userData of usersData) {
+            if (!userData.uuid || !userData['add-memories']) {
+                console.error(`❌ Invalid user data format, skipping user`)
+                continue
             }
+
+            const memories = userData['add-memories']
+            console.log(`\n👤 Processing ${memories.length} memories for user ${userData.uuid}`)
+
+            let userAddedCount = 0
+            
+            for (const memoryInput of memories) {
+                try {
+                    const memory = {
+                        user_id: userData.uuid,
+                        content: memoryInput.content,
+                        memory_date: parseDate(memoryInput.date).toISOString(),
+                        url: memoryInput.url || null,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    }
+
+                    // Insert the memory
+                    const { data: insertedMemory, error: memoryError } = await adminSupabase
+                        .from('memories')
+                        .insert(memory)
+                        .select('id')
+                        .single()
+
+                    if (memoryError) {
+                        console.error(`❌ Error adding memory: ${memoryError.message}`)
+                        continue
+                    }
+
+                    // Add tags if provided
+                    if (memoryInput.tags && memoryInput.tags.length > 0) {
+                        const tags = parseTagsFromArray(memoryInput.tags)
+                        
+                        for (const tag of tags) {
+                            await addTagToMemory(insertedMemory.id, tag)
+                        }
+                    }
+
+                    userAddedCount++
+                    totalAddedCount++
+                    console.log(`✅ Added memory: ${memoryInput.content.substring(0, 50)}...`)
+                    
+                } catch (error) {
+                    console.error(`❌ Error processing memory: ${error}`)
+                }
+            }
+            
+            console.log(`✅ Added ${userAddedCount} out of ${memories.length} memories for user ${userData.uuid}`)
         }
 
-        console.log(`\n🎉 Successfully added ${addedCount} out of ${memories.length} memories!`)
+        console.log(`\n🎉 Successfully added ${totalAddedCount} memories across ${usersData.length} user(s)!`)
         
     } catch (error) {
         console.error('❌ Error reading or parsing file:', error)
@@ -594,8 +612,8 @@ async function main() {
                 break
                 
             case 'list':
-                const userEmail = args[1]
-                await listMemories(userEmail)
+                const userIdentifier = args[1]
+                await listMemories(userIdentifier)
                 break
                 
             case 'search':

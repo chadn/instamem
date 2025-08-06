@@ -6,6 +6,8 @@
 ## What It Does
 Real-time search that finds memories as you type using keyword matching.
 
+*Status tracked in [Feature Status Table](../roadmap.md#feature-status-table)*
+
 ## Current State (0.1.0)
 - Basic keyword search with ILIKE pattern matching
 - 500ms debounced Supabase queries for responsive feel

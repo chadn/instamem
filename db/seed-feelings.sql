@@ -35,7 +35,7 @@ INSERT INTO feeling_definitions (feeling, category, definition) VALUES
 ('composed', 'positive', 'Calm and in control'),
 ('concerned', 'positive', 'Caring and attentive'),
 ('confident', 'positive', 'Self-assured and certain'),
-('contented', 'positive', 'Satisfied and happy'),
+('content', 'positive', 'Satisfied and happy'),
 ('cool', 'positive', 'Calm and composed'),
 ('curious', 'positive', 'Eager to learn or know'),
 ('dazzled', 'positive', 'Impressed and amazed'),
