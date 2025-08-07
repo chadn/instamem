@@ -94,7 +94,7 @@ tests/e2e/artifacts/
 Use `npm run test` for quick feedback during development.
 
 ### For CI/CD
-Use `npm run test:organized` to maintain historical records and easier debugging of failed builds.
+Use `npm run test` (with organized output) to maintain historical records and easier debugging of failed builds.
 
 ### For Debugging
 Use `npm run test:debug` or examine specific failed test artifacts in the organized directories.

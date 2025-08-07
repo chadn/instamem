@@ -4,30 +4,29 @@
 
 | Name                   | 0.1.0 | 0.2.0 | 0.5.0 | 1.0.0 | Priority |
 | ---------------------- | ----- | ----- | ----- | ----- | -------- |
-| Authentication         | ✅    |       | 📋    |       | P0       |
-| Memory Search          | ✅    | ✅    |       |       | P0       |
-| Add Memories           | ✅    | ✅    |       |       | P0       |
-| Edit Memories          |       | ✅    |       |       | P1       |
-| Basic UI               | ✅    |       |       |       | P0       |
-| Offline Support        |       | ✅    | 📋    |       | P1       |
-| Memory Export          |       |       | 📋    |       | P2       |
-| Testing Infrastructure |       | ✅    | 📋    |       | P1       |
-| Tag Suggestion         |       | 📋     |     |       | P1       |
-| Tag Management         |       |       | 📋    |       | P1       |
+| [Authentication](#authentication)         | ✅    |       | 📋    |       | P0       |
+| [Memory Search](#memory-search)          | ✅    | ✅    |       |       | P0       |
+| [Add/Edit Memories](#add-edit-memories)           | ✅    | ✅    |       |       | P0       |
+| [Basic UI](#basic-ui)               | ✅    |       |       |       | P0       |
+| [Offline Support](#offline-support)        |       | ✅    | 📋    |       | P1       |
+| [Memory Export](#memory-export)          |       |       | 📋    |       | P2       |
+| [Testing Infrastructure](#testing-infrastructure) |       | ✅    | 📋    |       | P1       |
+| [Tag Suggestion](#tag-suggestion)         |       | 📋     |     |       | P1       |
+| [Tag Management](#tag-management)         |       |       | 📋    |       | P1       |
 | instamem-server repo   |       |       | 📋    |       | P2       |
-| Semantic Search        |       |       | 💭    |       | P2       |
-| Multi-device Sync      |       |       |       | 💭    | P2       |
-| Dark Mode              |       |       |       | 📋    | P3       |
-| Keyboard Shortcuts     |       |       |       | 📋    | P2       |
-| Performance Monitoring |       |       |       | 📋    | P2       |
-| Data Visualization     |       |       |       | 💭    | P2       |
-| Advanced Analytics     |       |       |       | 💭    | P2       |
-| API Access             |       |       |       | 💭    | P2       |
+| [Semantic Search](#semantic-search)        |       |       | 💭    |       | P2       |
+| [Multi-device Sync](#multi-device-sync)      |       |       |       | 💭    | P2       |
+| [Dark Mode](#dark-mode)              |       |       |       | 📋    | P3       |
+| [Keyboard Shortcuts](#keyboard-shortcuts)     |       |       |       | 📋    | P2       |
+| [Performance Monitoring](#performance-monitoring) |       |       |       | 📋    | P2       |
+| [Data Visualization](#data-visualization)     |       |       |       | 💭    | P2       |
+| [Advanced Analytics](#advanced-analytics)     |       |       |       | 💭    | P2       |
+| [API Access](#api-access)             |       |       |       | 💭    | P2       |
 
 ✅ Done  
-🟡 IN PROGRESS
-📋 TODO
-💭 CONCEPT
+🟡 IN PROGRESS  
+📋 TODO  
+💭 CONCEPT 
 
 **Versions:**
 
@@ -49,13 +48,13 @@
 ### [Memory Search](features/memory-search.md)
 
 -   **0.1.0:** Basic keyword search with real-time results
--   **0.2.0:** Enhanced with fuzzy search, filters, search history
+-   **0.2.0:** Added search term highlighting in results
 -   **Learning:** Full-text search, PostgreSQL performance, real-time UI patterns
 
-### Add Memories
+### Add/Edit Memories
 
--   **0.1.0:** Simple CLI-based memory creation (direct database insert)
--   **0.2.0:** CLI-based Edit/Delete memory, UI based Add/edit/delete memory.
+-   **0.1.0:** Simple CLI-based memory creation (direct database insert), UI lists memories.
+-   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory, UI based Add/edit/delete memory.
 -   **0.5.0** AI-powered natural language parsing with LangChain, part of instamem-server repo
 
 ### Basic UI

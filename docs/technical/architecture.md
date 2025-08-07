@@ -1,5 +1,33 @@
 # InstaMem System Architecture
 
+## Table of Contents
+
+- [Overview](#overview)
+- [System Diagram](#system-diagram)
+- [Component Responsibilities](#component-responsibilities)
+  - [React Frontend (instamem)](#react-frontend-instamem)
+  - [LangChain API Server (instamem-server)](#langchain-api-server-instamem-server)
+  - [Supabase Database](#supabase-database)
+- [Data Flow](#data-flow)
+  - [Memory Search (Read Path)](#memory-search-read-path)
+  - [Memory Creation (Write Path)](#memory-creation-write-path)
+- [Technology Stack](#technology-stack)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+  - [Database](#database)
+- [Security Architecture](#security-architecture)
+  - [Authentication Flow](#authentication-flow)
+  - [Data Protection](#data-protection)
+- [Deployment Architecture](#deployment-architecture)
+  - [Production Environment](#production-environment)
+  - [Development Environment](#development-environment)
+- [Scalability Considerations](#scalability-considerations)
+  - [Current (0.1.0)](#current-010)
+  - [Future (1.0.0+)](#future-100)
+- [Migration Strategy](#migration-strategy)
+- [Investigations](#investigations)
+  - [Algolia for InstaMem: Analysis](#algolia-for-instamem-analysis)
+
 ## Overview
 
 InstaMem follows a two-tier architecture with separate frontend and backend repositories, connected through a shared Supabase database.
@@ -19,7 +47,7 @@ InstaMem follows a two-tier architecture with separate frontend and backend repo
              ▼                                            │    │
      ┌─────────────────────────────┐                      │    └ CLI for
      │    LangChain API Server     │                      │     db setup,
-     │ (Python FastAPI backend)    │                      │    add-memories
+     │ (Python FastAPI backend)    │                      │    memories
      └────────┬─────────┬──────────┘                      │
               │         │                                 │
               │         └──▶ Second, Update DB via Tool ──┘
@@ -179,14 +207,14 @@ Each phase builds on the previous without requiring major architectural changes.
   - Dashboard for search analytics and tuning
 
   Architectural Fit:
-
+  ```
   ┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
   │  React Frontend │───▶│   Algolia    │    │  Supabase DB    │
   │                 │    │   Search     │◀───│                 │
   │ - UI components │    │   Index      │    │ - Auth/RLS      │
   │ - InstantSearch │    │              │    │ - Memory CRUD   │
   └─────────────────┘    └──────────────┘    └─────────────────┘
-
+  ```
   Pros for InstaMem:
 
   ✅ Perfect for personal memory search:

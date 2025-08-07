@@ -3,33 +3,40 @@
 
 **Learning Focus:** Full-text search, PostgreSQL performance, real-time UI patterns
 
+## Table of Contents
+
+- [What It Does](#what-it-does)
+- [Current State (0.1.0)](#current-state-010)
+- [Next Steps (0.2.0)](#next-steps-020)
+- [Architecture Decision: Client-Side Search](#architecture-decision-client-side-search)
+- [What I Learned](#what-i-learned)
+
 ## What It Does
 Real-time search that finds memories as you type using keyword matching.
 
 *Status tracked in [Feature Status Table](../roadmap.md#feature-status-table)*
 
-## Current State (0.1.0)
+## Current State (0.2.0)
 - Basic keyword search with ILIKE pattern matching
 - 500ms debounced Supabase queries for responsive feel
 - Direct Supabase queries with RLS security
 - RLS ensures users only search their own memories
 - **Search term highlighting**: Partial match highlighting in content, URLs, and tags (like Algolia)
 
-## Next Steps (0.2.0)
+## Future Enhancements
 - Upgrade to PostgreSQL full-text search with `to_tsvector`
-- 100ms debounced queries for local instant searchresponsive feel
 - Add search filters by tags and date
-- Implement search result highlighting
+- Performance optimizations
 
 ## Architecture Decision: Client-Side Search
 
 **Decision**: Use direct Supabase client queries instead of API routes for memory search.
 
 **Rationale**:
-- ✅ **Better performance** - Direct database connection, no extra HTTP hop
-- ✅ **RLS security** - Row-Level Security automatically filters to user's data
-- ✅ **Simpler architecture** - Fewer moving parts, easier to debug
-- ✅ **Lower costs** - Less server compute usage
+- **Better performance** - Direct database connection, no extra HTTP hop
+- **RLS security** - Row-Level Security automatically filters to user's data
+- **Simpler architecture** - Fewer moving parts, easier to debug
+- **Lower costs** - Less server compute usage
 
 **Trade-offs**:
 - Database structure visible to client (acceptable for read-only search)

@@ -1,5 +1,43 @@
 # InstaMem Development Guide
 
+## Table of Contents
+
+- [Quick Start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Initial Setup](#initial-setup)
+- [Development Commands](#development-commands)
+  - [Core Commands](#core-commands)
+  - [Database Commands](#database-commands)
+  - [Memory Management](#memory-management)
+- [Project Structure](#project-structure)
+- [Configuration Files](#configuration-files)
+  - [Environment Variables (.env.local)](#environment-variables-envlocal)
+  - [TypeScript Configuration](#typescript-configuration)
+  - [ESLint Configuration](#eslint-configuration)
+- [Development Workflow](#development-workflow)
+  - [Feature Development](#feature-development)
+  - [Database Changes](#database-changes)
+- [Testing Strategy](#testing-strategy)
+  - [Current Testing](#current-testing)
+  - [Planned Testing (1.0.0)](#planned-testing-100)
+- [Code Style Guidelines](#code-style-guidelines)
+  - [TypeScript](#typescript)
+  - [React Components](#react-components)
+  - [Database Queries](#database-queries)
+- [Debugging](#debugging)
+  - [Common Issues](#common-issues)
+  - [Development Tools](#development-tools)
+- [Performance Considerations](#performance-considerations)
+  - [Development Environment](#development-environment)
+  - [Build Optimization](#build-optimization)
+- [Deployment Preparation](#deployment-preparation)
+  - [Pre-deployment Checklist](#pre-deployment-checklist)
+  - [Production Environment Variables](#production-environment-variables)
+- [Contributing Guidelines](#contributing-guidelines)
+  - [Code Quality](#code-quality)
+  - [Documentation](#documentation)
+  - [Git Workflow](#git-workflow)
+
 ## Quick Start
 
 ### Prerequisites
@@ -17,18 +55,56 @@
    npm install
    ```
 
-2. **Environment configuration**
+2. **Create Supabase project**
+
+   - Create new Supabase project under your organization
+   - Note your project ID and password
+   - Copy your anon public key from https://supabase.com/dashboard/project/_/settings/api-keys
+   - Enable Email Provider (login by email+password) in [Auth Providers](https://supabase.com/dashboard/project/_/auth/providers)
+     - Make sure "Confirm email" and other switches are off, then click "Save"
+   - Configure URL settings in [Auth Configuration](https://supabase.com/dashboard/project/_/auth/url-configuration):
+     - Site URL: `http://localhost:3000/`
+     - Redirect URLs: `http://localhost:3000/auth/callback`
+
+3. **Environment configuration**
    ```bash
-   cp .env.example .env.local
-   # Edit .env.local with your Supabase credentials
+   cat <<EOF > .env.local
+   SUPABASE_PROJECT_ID=your_project_id_here
+   SUPABASE_PROJECT_PASSWD=your_project_password_here
+   # NEXT_PUBLIC_ prefix makes variables accessible to frontend
+   NEXT_PUBLIC_SUPABASE_URL=https://your_project_id_here.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+   EOF
    ```
 
-3. **Database setup**
+4. **Database setup**
    ```bash
    npm run db setup
    ```
 
-4. **Start development server**
+5. **Configure OAuth providers in Supabase** (optional, for Google/GitHub login)
+   
+   Go to your Supabase project dashboard → **Authentication** → **Providers**
+   https://supabase.com/dashboard/project/_/auth/providers
+   
+   **Google OAuth:**
+   - Enable the Google provider
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create/select project → Dashboard → APIs & Services → Create Credentials → Create OAuth client ID
+   - Set Authorized redirect URI: `https://your-project-id.supabase.co/auth/v1/callback`
+   - Copy Client ID and Secret to Supabase
+   
+   **GitHub OAuth:**
+   - Enable the GitHub provider  
+   - Go to [GitHub Developer Settings](https://github.com/settings/developers)
+   - Create new OAuth App with callback: `https://your-project-id.supabase.co/auth/v1/callback`
+   - Copy Client ID and Secret to Supabase
+   
+   **Site URL Settings:**
+   - Set Site URL to `http://localhost:3000` (development)
+   - Add `http://localhost:3000/auth/callback` to Redirect URLs
+
+6. **Start development server**
    ```bash
    npm run dev
    ```
@@ -41,20 +117,21 @@ npm run dev          # Start Next.js development server
 npm run build        # Build for production
 npm run start        # Start production server
 npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript checks
+# TypeScript checking is included in npm run build
 ```
 
 ### Database Commands
 ```bash
-npm run db setup     # Initialize database with tables and seed data
-npm run db reset     # Drop all tables and recreate
-npm run db seed      # Seed data only
-npm run db check     # Verify database connection and structure
+npm run db setup          # Initialize database with tables and seed data
+npm run db reset          # Drop all tables and recreate  
+npm run db seed           # Seed data only
+npm run db check          # Verify database connection and structure
+npm run db seed-test-user # Create test@instamem.local for running tests
 ```
 
 ### Memory Management
 ```bash
-npm run add-memories # CLI tool to add memories manually
+npm run memories     # CLI tool to add memories manually
 ```
 
 ## Project Structure
@@ -78,7 +155,7 @@ instamem/
 │   ├── hooks/               # Custom React hooks
 │   └── providers/           # React context providers
 ├── scripts/
-│   ├── add-memories.ts      # CLI memory creation tool
+│   ├── memories.ts          # CLI memory creation tool
 │   └── db-setup.sh          # Database setup automation
 ├── docs/                    # Documentation
 └── public/                  # Static assets
@@ -125,8 +202,7 @@ SUPABASE_PROJECT_PASSWD=your-project-password
 4. **Test locally**
    ```bash
    npm run lint
-   npm run type-check
-   npm run build
+   npm run build  # includes TypeScript checking
    ```
 
 5. **Update documentation**
@@ -193,7 +269,7 @@ npm run db reset
 **TypeScript Errors**
 ```bash
 # Check type definitions
-npm run type-check
+npm run build  # TypeScript checking included
 
 # Regenerate database types if schema changed
 npx supabase gen types typescript --local > src/types/database.ts

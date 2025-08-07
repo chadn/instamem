@@ -2,6 +2,21 @@
 
 **Quick Summary:** Multi-layered testing with E2E (implemented), unit tests (planned), and integration tests (planned). Commands, structure, and development workflow.
 
+## Table of Contents
+
+- [Test Types](#test-types)
+- [Commands](#commands)
+  - [Available Now](#available-now)
+  - [Planned (Not Yet Available)](#planned-not-yet-available)
+  - [Future](#future)
+- [Test Structure](#test-structure)
+- [Development Workflow](#development-workflow)
+  - [Quick Development Cycle](#quick-development-cycle)
+  - [Pre-commit Validation](#pre-commit-validation)
+- [Test Areas](#test-areas)
+- [Quality Standards](#quality-standards)
+- [Next Steps](#next-steps)
+
 Also see
 
 -   [test-coverage-summary.md](./test-coverage-summary.md): Detailed breakdown of E2E test coverage, categories, and implementation notes.
@@ -23,7 +38,7 @@ Also see
 
 ## Commands
 
-### ✅ Available Now
+### Available Now
 
 ```bash
 npm run test              # Full E2E suite
@@ -37,7 +52,7 @@ npm run test -- --grep "search"    # Search functionality
 npm run test -- --grep "memory"    # Memory management
 ```
 
-### 📋 Planned (Not Yet Available)
+### Planned (Not Yet Available)
 
 ```bash
 npm run test:unit         # Unit tests (Jest + RTL)
@@ -45,7 +60,7 @@ npm run test:integration  # Integration tests
 npm run test:quick        # Fast pre-commit tests
 ```
 
-### 🔮 Future
+### Future
 
 ```bash
 npm run test:visual       # Visual regression

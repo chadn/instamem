@@ -3,6 +3,20 @@
 
 **Learning Focus:** OAuth flows, JWT tokens, Row-Level Security policies
 
+## Table of Contents
+
+- [What It Does](#what-it-does)
+- [Why This Version/Priority](#why-this-versionpriority)
+- [Implementation Approach](#implementation-approach)
+- [Key Technology Choices](#key-technology-choices)
+- [Integration Points](#integration-points)
+- [Dependencies](#dependencies)
+- [Success Criteria](#success-criteria)
+- [What I Learned](#what-i-learned)
+- [What Worked Well](#what-worked-well)
+- [What I'd Do Differently](#what-id-do-differently)
+- [Discussion Points for Others](#discussion-points-for-others)
+
 ## What It Does
 User authentication via Google and GitHub OAuth using Supabase Auth, enabling secure access to personal memories with automatic user isolation.
 

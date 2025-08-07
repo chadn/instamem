@@ -2,9 +2,26 @@
 
 **Quick Summary:** Detailed chronicle of testing implementation, breakthroughs, challenges overcome, and specific accomplishments. Technical reference for understanding how we got to the current testing state.
 
+## Table of Contents
+
+- [Major Breakthroughs](#major-breakthroughs)
+  - [Authentication Wall Breakthrough (July 2025)](#authentication-wall-breakthrough-july-2025)
+  - [Intermittent Timeout Resolution](#intermittent-timeout-resolution)
+  - [Organized Test Output System](#organized-test-output-system)
+- [Implementation Milestones](#implementation-milestones)
+- [Current Test Statistics (Snapshot)](#current-test-statistics-snapshot)
+- [Technical Challenges Overcome](#technical-challenges-overcome)
+  - [Challenge 1: @supabase/ssr Authentication](#challenge-1-supabasessr-authentication)
+  - [Challenge 2: State Management Between Tests](#challenge-2-state-management-between-tests)
+  - [Challenge 3: Network Reliability](#challenge-3-network-reliability)
+- [Security Findings from Testing](#security-findings-from-testing)
+- [Development Process Insights](#development-process-insights)
+- [Future Implementation Roadmap](#future-implementation-roadmap)
+- [Architecture Decisions](#architecture-decisions)
+
 ## Major Breakthroughs
 
-### 🚀 Authentication Wall Breakthrough (July 2025)
+### Authentication Wall Breakthrough (July 2025)
 **Problem**: Could not reliably authenticate users in E2E tests using @supabase/ssr session injection. Multiple approaches failed including localStorage manipulation, API route creation, and complex auth fixtures.
 
 **Solution**: Created `/login-email` page with direct Supabase `signInWithPassword()` method, completely bypassing OAuth complexity for testing.
@@ -17,7 +34,7 @@
 
 **Impact**: Unlocked ability to test complete authenticated user workflows, enabling comprehensive E2E testing of search, memory management, and user interface functionality.
 
-### 🔧 Intermittent Timeout Resolution
+### Intermittent Timeout Resolution
 **Problem**: Tests occasionally failed with login timeouts due to timing issues in parallel execution.
 
 **Solution**: Implemented robust authentication helper (`tests/e2e/helpers/auth-helper.ts`) with:
@@ -28,7 +45,7 @@
 
 **Results**: Test reliability improved from ~80% to >95% success rate.
 
-### 📁 Organized Test Output System
+### Organized Test Output System
 **Problem**: Test results scattered across timestamped folders, difficult to track pass/fail history.
 
 **Solution**: Implemented automatic test result organization:

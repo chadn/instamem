@@ -19,7 +19,7 @@ async function globalSetup(playwrightConfig: FullConfig) {
     const missingVars = requiredEnvVars.filter((varName) => !process.env[varName])
     if (missingVars.length > 0) {
         console.error('❌ Missing required environment variables:', missingVars.join(', '))
-        console.error('💡 Run: npm run db:seed-test-user to create test credentials')
+        console.error('💡 Run: npm run db seed-test-user to create test credentials')
         process.exit(1)
     }
 
@@ -63,7 +63,7 @@ async function globalSetup(playwrightConfig: FullConfig) {
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error'
         console.error('❌ Failed to setup test authentication:', errorMessage)
-        console.error('💡 Make sure you ran: npm run db:seed-test-user')
+        console.error('💡 Make sure you ran: npm run db seed-test-user')
         process.exit(1)
     }
 }

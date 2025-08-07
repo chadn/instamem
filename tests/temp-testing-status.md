@@ -54,7 +54,7 @@ npm test -- --grep "can see search results from searching for chad"  # Verify se
 ### Test User Setup
 
 ```bash
-npm run db:seed-test-user  # Creates test@instamem.local with password
+npm run db seed-test-user  # Creates test@instamem.local with password
 ```
 
 ### 3. What We Can Test Now (MAJOR BREAKTHROUGH! 🎉)
@@ -280,7 +280,7 @@ The goal is to **start testing search functionality as quickly as possible**, no
 npm test -- --grep "Basic Auth Tests"
 
 # Check test user setup
-npm run db:seed-test-user
+npm run db seed-test-user
 
 # Debug test environment
 npm run test:debug

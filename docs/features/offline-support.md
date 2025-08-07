@@ -4,6 +4,24 @@ _See [roadmap.md](../roadmap.md) for version, priority, status, and effort estim
 
 **Learning Focus:** PWA/IndexedDB basics, Sync patterns, CRDTs
 
+## Table of Contents
+
+- [What It Does](#what-it-does)
+- [Learning Goals](#learning-goals)
+- [Implementation Ideas (0.2.0) Partial Offline Support](#implementation-ideas-020-partial-offline-support)
+- [Implementation Ideas (0.5.0) - Full Offline Support](#implementation-ideas-050---full-offline-support)
+- [Open Questions](#open-questions)
+- [Details](#details)
+  - [PWA vs Native Apps](#pwa-vs-native-apps)
+  - [Storage Capacity Analysis](#storage-capacity-analysis)
+  - [Architecture for 0.2.0 Partial Offline Support](#architecture-for-020-partial-offline-support)
+- [Dependencies](#dependencies)
+- [Integration Points](#integration-points)
+- [Why This Version/Priority](#why-this-versionpriority)
+- [Success Criteria](#success-criteria)
+- [0.2.0 Implementation Status](#020-implementation-status)
+- [Database Sync Schema](#database-sync-schema)
+
 ## What It Does
 
 Cached memory search when offline, with sync when connectivity returns.
@@ -259,7 +277,7 @@ Not recommended
   - No data loss: All memories cached locally for instant access
 
   🛠 Technical Architecture
-
+  ```
   ┌─────────────────┐    ┌───────────────────┐    ┌─────────────────┐
   │   Online Search │    │  Network Provider │    │ Offline Search  │
   │   (Supabase)    │◄──►│ (navigator.onLine)│◄──►│  (IndexedDB +   │
@@ -280,7 +298,7 @@ Not recommended
                           │ MemorySearch UI  │
                           │   Component      │
                           └──────────────────┘
-
+  ```
   The implementation perfectly follows the 0.2.0 specification: Read-only offline experience with IndexedDB + 
   Fuse.js, setting up the foundation for 0.5.0 offline writes and sync conflict resolution.
 ---

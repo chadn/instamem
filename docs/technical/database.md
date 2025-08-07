@@ -1,5 +1,21 @@
 # InstaMem Database Design
 
+## Table of Contents
+
+- [Design Rationale](#design-rationale)
+- [Key Query Patterns](#key-query-patterns)
+  - [Memory Search](#memory-search)
+  - [Tag Filtering](#tag-filtering)
+  - [Memory Creation](#memory-creation)
+- [Performance Considerations](#performance-considerations)
+- [Database Access Patterns](#database-access-patterns)
+  - [Client-Side Pattern (Current)](#client-side-pattern-current)
+  - [Server-Side Pattern (Future)](#server-side-pattern-future)
+- [Database Scripts](#database-scripts)
+  - [npm run db](#npm-run-db)
+  - [npm run memories](#npm-run-memories)
+- [Future Optimizations](#future-optimizations)
+
 ## Design Rationale
 
 ### Flexible Tagging System
@@ -102,14 +118,14 @@ Commands:
   seed   - Insert initial data only
 ```
 
-### npm run add-memories
+### npm run memories
 
 Simple way to populate DB with memories
 
 ```
 Usage:
-npm run add-memories list  # list users and tags for memory creating
-npm run add-memories scripts/add-memories-example.json
+npm run memories list  # list users and tags for memory creating
+npm run memories scripts/memories-example.json
 ```
 
 ## Future Optimizations
