@@ -2,31 +2,31 @@
 
 ## Feature Status Table
 
-| Name                   | 0.1.0 | 0.2.0 | 0.5.0 | 1.0.0 | Priority |
-| ---------------------- | ----- | ----- | ----- | ----- | -------- |
-| [Authentication](#authentication)         | ✅    |       | 📋    |       | P0       |
-| [Memory Search](#memory-search)          | ✅    | ✅    |       |       | P0       |
-| [Add/Edit Memories](#add-edit-memories)           | ✅    | ✅    |       |       | P0       |
-| [Basic UI](#basic-ui)               | ✅    |       |       |       | P0       |
-| [Offline Support](#offline-support)        |       | ✅    | 📋    |       | P1       |
-| [Memory Export](#memory-export)          |       |       | 📋    |       | P2       |
+| Name                                              | 0.1.0 | 0.2.0 | 0.5.0 | 1.0.0 | Priority |
+| ------------------------------------------------- | ----- | ----- | ----- | ----- | -------- |
+| [Authentication](#authentication)                 | ✅    |       | 📋    |       | P0       |
+| [Memory Search](#memory-search)                   | ✅    | ✅    |       |       | P0       |
+| [Add Edit Memories](#add-edit-memories)           | ✅    | ✅    |       |       | P0       |
+| [Basic UI](#basic-ui)                             | ✅    | ✅    |       |       | P0       |
+| [Offline Support](#offline-support)               |       | ✅    | 📋    |       | P1       |
+| [Memory Export](#memory-export)                   |       |       | 📋    |       | P2       |
 | [Testing Infrastructure](#testing-infrastructure) |       | ✅    | 📋    |       | P1       |
-| [Tag Suggestion](#tag-suggestion)         |       | 📋     |     |       | P1       |
-| [Tag Management](#tag-management)         |       |       | 📋    |       | P1       |
-| instamem-server repo   |       |       | 📋    |       | P2       |
-| [Semantic Search](#semantic-search)        |       |       | 💭    |       | P2       |
-| [Multi-device Sync](#multi-device-sync)      |       |       |       | 💭    | P2       |
-| [Dark Mode](#dark-mode)              |       |       |       | 📋    | P3       |
-| [Keyboard Shortcuts](#keyboard-shortcuts)     |       |       |       | 📋    | P2       |
+| [Tag Suggestion](#tag-suggestion)                 |       | 📋    |       |       | P1       |
+| [Tag Management](#tag-management)                 |       |       | 📋    |       | P1       |
+| instamem-server repo                              |       |       | 📋    |       | P2       |
+| [Semantic Search](#semantic-search)               |       |       | 💭    |       | P2       |
+| [Multi-device Sync](#multi-device-sync)           |       |       |       | 💭    | P2       |
+| [Dark Mode](#dark-mode)                           |       |       |       | 📋    | P3       |
+| [Keyboard Shortcuts](#keyboard-shortcuts)         |       |       |       | 📋    | P2       |
 | [Performance Monitoring](#performance-monitoring) |       |       |       | 📋    | P2       |
-| [Data Visualization](#data-visualization)     |       |       |       | 💭    | P2       |
-| [Advanced Analytics](#advanced-analytics)     |       |       |       | 💭    | P2       |
-| [API Access](#api-access)             |       |       |       | 💭    | P2       |
+| [Data Visualization](#data-visualization)         |       |       |       | 💭    | P2       |
+| [Advanced Analytics](#advanced-analytics)         |       |       |       | 💭    | P2       |
+| [API Access](#api-access)                         |       |       |       | 💭    | P2       |
 
 ✅ Done  
 🟡 IN PROGRESS  
 📋 TODO  
-💭 CONCEPT 
+💭 CONCEPT
 
 **Versions:**
 
@@ -51,15 +51,17 @@
 -   **0.2.0:** Added search term highlighting in results
 -   **Learning:** Full-text search, PostgreSQL performance, real-time UI patterns
 
-### Add/Edit Memories
+### Add Edit Memories
 
 -   **0.1.0:** Simple CLI-based memory creation (direct database insert), UI lists memories.
--   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory, UI based Add/edit/delete memory.
+-   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory
+-   **0.2.0:** UI based Add/edit/delete memory.
 -   **0.5.0** AI-powered natural language parsing with LangChain, part of instamem-server repo
 
 ### Basic UI
 
 -   **0.1.0:** Clean, responsive interface with ShadCN components
+-   **0.2.0:** Looks good and works on mobile
 -   **Learning:** Modern React patterns, Tailwind CSS, component design
 
 ### [Offline Support](features/offline-support.md)
@@ -86,7 +88,7 @@
 
 ### Tag Suggestion
 
--   Tags shown in search results. Ex: search for "per" will show all matching tags, like ones starting with "person:" in an overlay below search box.  User can use arrow keys to go up/down matching tags, enter to select.  They can also click on one.
+-   Tags shown in search results. Ex: search for "per" will show all matching tags, like ones starting with "person:" in an overlay below search box. User can use arrow keys to go up/down matching tags, enter to select. They can also click on one.
 -   Tags with definitions (feeling) will show feeling and definition, in a similar overlay.
 -   **Learning:** Data relationships, UI for hierarchical data, search UX
 

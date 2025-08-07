@@ -1,8 +1,11 @@
 {
     "name": "instamem",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "private": true,
+    "type": "module",
     "scripts": {
+        "predev": "node scripts/inject-sw-version.js",
+        "prebuild": "node scripts/inject-sw-version.js",
         "dev": "next dev",
         "build": "next build",
         "start": "next start",

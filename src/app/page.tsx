@@ -3,9 +3,9 @@
 import { useAuth } from '@/providers/auth-provider'
 import { UserMenu } from '@/components/user-menu'
 import { MemorySearch } from '@/components/memory-search'
-import { SyncStatus } from '@/components/sync-status'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { LightningIcon } from '@/components/icons'
 
 export default function Home() {
     const { user, loading } = useAuth()
@@ -35,10 +35,10 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <div className="flex items-center">
+                            <LightningIcon className="h-7 w-7 mr-1" />
                             <h1 className="text-xl font-semibold text-gray-900">InstaMem</h1>
                         </div>
                         <div className="flex items-center gap-4">
-                            <SyncStatus />
                             <UserMenu />
                         </div>
                     </div>
