@@ -1,8 +1,9 @@
 -- InstaMem Database Setup Script
 -- Run this in your Supabase SQL Editor
 
--- Enable extensions
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
+-- Create extensions schema and enable extensions
+CREATE SCHEMA IF NOT EXISTS extensions;
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA extensions;
 
 -- Create tag_keys table
 CREATE TABLE IF NOT EXISTS tag_keys (

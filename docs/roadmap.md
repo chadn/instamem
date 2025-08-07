@@ -136,5 +136,3 @@
 Stuff that needs to be addressed or fleshed out
 
 -   mobile view is bad - nav bar needs work
--   Supabase warning: "Extension pg_trgm is installed in the public schema. Move it to another schema."
-    https://supabase.com/dashboard/project/lgaqcgknpgkksjdzuefk/advisors/security?preset=WARN&id=extension_in_public_pg_trgm
