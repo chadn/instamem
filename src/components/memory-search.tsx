@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Search } from 'lucide-react'
+import { Search, Edit } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { highlightPartialMatches } from '@/utils/searchHighlight'
 import { SearchResult } from '@/types/memory'
 import { useNetwork } from '@/providers/network-provider'
@@ -17,6 +18,7 @@ export function MemorySearch() {
     })
     const [debouncedQuery, setDebouncedQuery] = useState('')
     const { isOnline } = useNetwork()
+    const router = useRouter()
 
     // Debounce search query (500ms as per docs)
     useEffect(() => {
@@ -184,21 +186,34 @@ export function MemorySearch() {
                                             </span>
                                         </div>
                                         
-                                        {/* Right side: Tags */}
-                                        {memory.tags.length > 0 && (
-                                            <div className="flex gap-1 flex-shrink-0">
-                                                {memory.tags.map((tag, index) => (
-                                                    <span 
-                                                        key={index}
-                                                        className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800"
-                                                    >
-                                                        {highlightPartialMatches(`${tag.key}:${tag.value}`, query, {
-                                                            highlightClassName: 'bg-blue-300 text-blue-900 px-0.5 rounded font-medium'
-                                                        })}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
+                                        {/* Right side: Tags and Edit Button */}
+                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                            {/* Tags */}
+                                            {memory.tags.length > 0 && (
+                                                <div className="flex gap-1">
+                                                    {memory.tags.map((tag, index) => (
+                                                        <span 
+                                                            key={index}
+                                                            className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800"
+                                                        >
+                                                            {highlightPartialMatches(`${tag.key}:${tag.value}`, query, {
+                                                                highlightClassName: 'bg-blue-300 text-blue-900 px-0.5 rounded font-medium'
+                                                            })}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            
+                                            {/* Edit Button */}
+                                            <button 
+                                                onClick={() => router.push(`/memory/${memory.id}/edit`)}
+                                                className="p-1 hover:bg-gray-200 rounded flex-shrink-0 transition-colors"
+                                                aria-label="Edit memory"
+                                                title="Edit memory"
+                                            >
+                                                <Edit className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -208,15 +223,30 @@ export function MemorySearch() {
 
                 {/* Helpful prompt when no query */}
                 {!query && (
-                    <div className="text-center">
-                        <p className="text-sm text-gray-500">
-                            Try searching for people, places, events, or tags like &quot;people&quot;, &quot;feeling&quot;, or &quot;excited&quot;
-                        </p>
-                        {!isOnline && (
-                            <p className="text-xs text-orange-600 mt-2">
-                                📱 Searching offline cached memories
+                    <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                            <p className="text-sm text-gray-500">
+                                Try searching for people, places, events, or tags like &quot;people&quot;, &quot;feeling&quot;, or &quot;excited&quot;
                             </p>
-                        )}
+                            {!isOnline && (
+                                <p className="text-xs text-orange-600 mt-2">
+                                    📱 Searching offline cached memories
+                                </p>
+                            )}
+                        </div>
+                        
+                        {/* Create Memory Button */}
+                        <div className="flex-shrink-0 ml-4">
+                            <button
+                                onClick={() => router.push('/memory/create')}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Create Memory
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

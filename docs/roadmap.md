@@ -55,7 +55,7 @@
 
 -   **0.1.0:** Simple CLI-based memory creation (direct database insert), UI lists memories.
 -   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory
--   **0.2.0:** UI based Add/edit/delete memory.
+-   **0.2.0:** UI-based memory editing with sophisticated tag editing, dedicated edit pages, and advanced tag input with autocomplete
 -   **0.5.0** AI-powered natural language parsing with LangChain, part of instamem-server repo
 
 ### Basic UI
