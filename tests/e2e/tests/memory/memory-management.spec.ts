@@ -143,9 +143,14 @@ test.describe('Memory Management Features', () => {
         
         await loginAsTestUser(page)
         
-        // Look for user information
-        const userEmail = page.locator('text=test@instamem.local')
-        await expect(userEmail).toBeVisible({ timeout: 5000 })
+        // Look for user information - check partial email first
+        const partialEmail = page.locator('text=test@')
+        await expect(partialEmail).toBeVisible({ timeout: 5000 })
+        
+        // Open user menu to see full email
+        await partialEmail.click()
+        const fullUserEmail = page.locator('text=test@instamem.local')
+        await expect(fullUserEmail).toBeVisible({ timeout: 5000 })
         
         // Look for authentication provider info
         const authProviders = [
@@ -175,6 +180,10 @@ test.describe('Memory Management Features', () => {
         console.log('🚪 Testing sign out functionality...')
         
         await loginAsTestUser(page)
+        
+        // Open user menu first
+        const partialEmail = page.locator('text=test@')
+        await partialEmail.click()
         
         // Find and click sign out button
         const signOutButton = page.locator('text=Sign out')

@@ -3,14 +3,16 @@ import { Page, Locator } from '@playwright/test'
 export class SearchPage {
     readonly page: Page
     readonly searchInput: Locator
-    readonly userEmail: Locator
+    readonly partialUserEmail: Locator
+    readonly fullUserEmail: Locator
     readonly signOutButton: Locator
     readonly welcomeText: Locator
 
     constructor(page: Page) {
         this.page = page
         this.searchInput = page.locator('[placeholder*="Search"]')
-        this.userEmail = page.locator('text=test@instamem.local')
+        this.partialUserEmail = page.locator('text=test@')
+        this.fullUserEmail = page.locator('text=test@instamem.local')
         this.signOutButton = page.locator('text=Sign out')
         this.welcomeText = page.locator('text=Welcome to InstaMem')
     }
@@ -34,9 +36,18 @@ export class SearchPage {
     }
 
     async isUserAuthenticated() {
-        const hasUserEmail = await this.userEmail.isVisible().catch(() => false)
-        const hasSignOut = await this.signOutButton.isVisible().catch(() => false)
-        return hasUserEmail || hasSignOut
+        const hasPartialEmail = await this.partialUserEmail.isVisible().catch(() => false)
+        if (hasPartialEmail) {
+            // Open menu to check for sign out
+            await this.partialUserEmail.click()
+            const hasSignOut = await this.signOutButton.isVisible().catch(() => false)
+            if (hasSignOut) {
+                // Close menu
+                await this.page.keyboard.press('Escape')
+            }
+            return hasSignOut
+        }
+        return false
     }
 
     async takeScreenshot(name: string) {

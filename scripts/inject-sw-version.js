@@ -1,12 +1,9 @@
 // inject-sw-version.js
 // Updates the CACHE_NAME in public/sw.js to match the version in package.json
 
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+const fs = require('fs')
+const path = require('path')
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 const swPath = path.join(__dirname, '../public/sw.js')
 const pkgPath = path.join(__dirname, '../package.json')

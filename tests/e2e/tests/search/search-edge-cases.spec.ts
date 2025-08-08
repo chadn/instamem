@@ -217,12 +217,17 @@ test.describe('Search Edge Cases and Error Handling', () => {
         await searchInput.press('Enter')
         
         // Immediately try to interact with other elements
-        const userEmail = page.locator('text=test@instamem.local')
-        const signOutButton = page.locator('text=Sign out')
+        // Check for partial email display first
+        const partialEmail = page.locator('text=test@')
+        await expect(partialEmail).toBeVisible()
         
-        // These should remain clickable even during search
-        await expect(userEmail).toBeVisible()
+        // Open user menu to access sign out
+        await partialEmail.click()
+        const signOutButton = page.locator('text=Sign out')
         await expect(signOutButton).toBeVisible()
+        
+        // Close menu to continue test
+        await page.keyboard.press('Escape')
         
         // Input should remain editable
         await searchInput.clear()

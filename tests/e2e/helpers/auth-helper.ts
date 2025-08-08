@@ -156,6 +156,13 @@ export async function isUserLoggedIn(page: Page): Promise<boolean> {
  */
 export async function logout(page: Page): Promise<void> {
     try {
+        // First try to open user menu
+        const partialEmail = page.locator('text=test@')
+        if (await partialEmail.isVisible({ timeout: 5000 }).catch(() => false)) {
+            await partialEmail.click()
+            await page.waitForTimeout(500)
+        }
+        
         const signOutButton = page.locator('text=Sign out')
         if (await signOutButton.isVisible({ timeout: 5000 }).catch(() => false)) {
             await signOutButton.click()

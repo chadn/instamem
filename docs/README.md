@@ -21,10 +21,8 @@
 
 ## 🧪 Testing Documentation
 
--   🧪 [**Testing Strategy**](tests.md) - Test types, commands, development workflow  
--   📊 [**Test Coverage Summary**](test-coverage-summary.md) - Current test results and implementation notes
+-   🧪 [**Testing Strategy**](tests.md) - Test types, commands, development workflow, detailed coverage breakdown
 -   📖 [**Testing History**](tests-history.md) - Implementation breakthroughs and technical challenges
--   📁 [**Test Output Organization**](test-output-organization.md) - Test artifact management and cleanup
 
 
 ## 📁 Project Structure
@@ -44,10 +42,8 @@ docs/
 │   ├── architecture.md          # System design and components
 │   ├── database.md              # Schema and query patterns
 │   └── development.md           # Setup and development guide
-├── tests.md                     # Testing strategy and commands
-├── tests-history.md             # Implementation breakthroughs
-├── test-coverage-summary.md     # Current test results  
-└── test-output-organization.md  # Test artifact management
+├── tests.md                     # Testing strategy, commands, and coverage breakdown
+└── tests-history.md             # Implementation breakthroughs and challenges
 ```
 
 ## 🚀 Quick Navigation
@@ -63,5 +59,5 @@ docs/
 - Add details to [**Changelog**](CHANGELOG.md) when releasing
 
 **Testing?**
-- See [**Testing Strategy**](tests.md) for commands and workflow
-- Check [**Test Coverage**](test-coverage-summary.md) for current status
+- See [**Testing Strategy**](tests.md) for commands, workflow, and detailed coverage
+- Check [**Testing History**](tests-history.md) for implementation breakthroughs

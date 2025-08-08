@@ -48,30 +48,18 @@ export default defineConfig({
     /* Set up environment variables for testing */
     globalSetup: require.resolve('./global-setup.ts'),
 
-    /* Configure projects for major browsers - optimized for macOS */
+    /* Configure projects - Chromium-first with optional cross-browser */
     projects: [
         {
             name: 'chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                // Ensure we're using bundled Chromium (no channel specified)
                 headless: true,
-                // Optimize for macOS
-                launchOptions: {
-                    args: [
-                        '--disable-web-security',
-                        '--disable-features=TranslateUI',
-                        '--disable-ipc-flooding-protection',
-                        '--disable-background-timer-throttling',
-                        '--disable-backgrounding-occluded-windows',
-                        '--disable-renderer-backgrounding',
-                    ],
-                },
             },
         },
 
-        // Only run Firefox and WebKit when explicitly requested
-        // This speeds up development while still supporting cross-browser testing
+        // Cross-browser testing available via PLAYWRIGHT_BROWSERS environment variable
+        // Usage: PLAYWRIGHT_BROWSERS=firefox,webkit,mobile npm run test:e2e
         ...(process.env.PLAYWRIGHT_BROWSERS?.includes('firefox')
             ? [
                   {
@@ -96,7 +84,6 @@ export default defineConfig({
               ]
             : []),
 
-        /* Test against mobile viewports when requested */
         ...(process.env.PLAYWRIGHT_BROWSERS?.includes('mobile')
             ? [
                   {

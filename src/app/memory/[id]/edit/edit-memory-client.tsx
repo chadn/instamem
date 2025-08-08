@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Memory } from '@/types/memory'
 import { MemoryForm } from '@/components/memory-form'
-import { updateMemory } from '@/lib/memory-queries'
+import { updateMemory, deleteMemory } from '@/lib/memory-queries'
 import { createClient } from '@/lib/supabase-browser'
 
 interface EditMemoryClientProps {
@@ -18,6 +18,7 @@ export function EditMemoryClient({ memory }: EditMemoryClientProps) {
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showErrorModal, setShowErrorModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
+    const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false)
     
     const handleSave = async (updatedMemory: Partial<Memory>) => {
         setSaving(true)
@@ -51,6 +52,27 @@ export function EditMemoryClient({ memory }: EditMemoryClientProps) {
         router.push('/')
     }
     
+    const handleDelete = async () => {
+        setSaving(true)
+        setError(null)
+        
+        try {
+            const supabase = createClient()
+            await deleteMemory(supabase, memory.id)
+            
+            // Show delete success modal
+            setShowDeleteSuccessModal(true)
+            
+        } catch (err) {
+            console.error('Error deleting memory:', err)
+            const errorMsg = err instanceof Error ? err.message : 'Failed to delete memory'
+            setErrorMessage(errorMsg)
+            setShowErrorModal(true)
+        } finally {
+            setSaving(false)
+        }
+    }
+    
     const handleSuccessOk = () => {
         setShowSuccessModal(false)
         router.push('/')
@@ -59,6 +81,11 @@ export function EditMemoryClient({ memory }: EditMemoryClientProps) {
     const handleErrorOk = () => {
         setShowErrorModal(false)
         setErrorMessage('')
+    }
+    
+    const handleDeleteSuccessOk = () => {
+        setShowDeleteSuccessModal(false)
+        router.push('/')
     }
     
     return (
@@ -75,6 +102,7 @@ export function EditMemoryClient({ memory }: EditMemoryClientProps) {
                     initialData={memory}
                     onSave={handleSave}
                     onCancel={handleCancel}
+                    onDelete={handleDelete}
                     loading={saving}
                 />
             </div>
@@ -116,11 +144,36 @@ export function EditMemoryClient({ memory }: EditMemoryClientProps) {
                                     </svg>
                                 </div>
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">Save Failed</h3>
+                            <h3 className="text-lg font-medium text-gray-900 mb-2">Operation Failed</h3>
                             <p className="text-gray-600 mb-4">{errorMessage}</p>
                             <button
                                 onClick={handleErrorOk}
                                 className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Delete Success Modal */}
+            {showDeleteSuccessModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
+                        <div className="text-center">
+                            <div className="mb-4">
+                                <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 className="text-lg font-medium text-gray-900 mb-2">Memory Deleted</h3>
+                            <p className="text-gray-600 mb-4">The memory has been permanently deleted.</p>
+                            <button
+                                onClick={handleDeleteSuccessOk}
+                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 OK
                             </button>

@@ -87,8 +87,22 @@ test.describe('Basic Auth Tests', () => {
         
         // Check if we can see search interface and user authentication
         const hasSearchInput = await page.locator('[placeholder*="Search"]').isVisible({ timeout: 2000 }).catch(() => false)
-        const hasUserEmail = await page.locator('text=test@instamem.local').isVisible({ timeout: 1000 }).catch(() => false)
-        const hasSignOutButton = await page.locator('text=Sign out').isVisible({ timeout: 1000 }).catch(() => false)
+        const hasPartialEmail = await page.locator('text=test@').isVisible({ timeout: 1000 }).catch(() => false)
+        
+        // Try to open user menu to check for full email and sign out
+        let hasUserEmail = false
+        let hasSignOutButton = false
+        if (hasPartialEmail) {
+            await page.locator('text=test@').click({ timeout: 1000 }).catch(() => {})
+            hasUserEmail = await page.locator('text=test@instamem.local').isVisible({ timeout: 1000 }).catch(() => false)
+            hasSignOutButton = await page.locator('text=Sign out').isVisible({ timeout: 1000 }).catch(() => false)
+            // Close menu
+            await page.keyboard.press('Escape').catch(() => {})
+        } else {
+            // Fallback to old method
+            hasUserEmail = await page.locator('text=test@instamem.local').isVisible({ timeout: 1000 }).catch(() => false)
+            hasSignOutButton = await page.locator('text=Sign out').isVisible({ timeout: 1000 }).catch(() => false)
+        }
         const isOnEmailLoginPage = await page.locator('text=Email Login').isVisible({ timeout: 1000 }).catch(() => false)
         
         // Take a screenshot to see what page state we're in
@@ -130,7 +144,7 @@ test.describe('Basic Auth Tests', () => {
             }
         } else {
             console.log('❓ Partial authentication state detected')
-            console.log(`   Search input: ${hasSearchInput}, User email: ${hasUserEmail}, Sign out: ${hasSignOutButton}`)
+            console.log(`   Search input: ${hasSearchInput}, Partial email: ${hasPartialEmail}, User email: ${hasUserEmail}, Sign out: ${hasSignOutButton}`)
             console.log('📷 Page state screenshot attached to test report')
         }
         

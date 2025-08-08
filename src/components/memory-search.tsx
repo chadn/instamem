@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Search, Edit } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { highlightPartialMatches } from '@/utils/searchHighlight'
@@ -8,6 +8,8 @@ import { SearchResult } from '@/types/memory'
 import { useNetwork } from '@/providers/network-provider'
 import { OnlineSearchService } from '@/lib/search-service'
 import { searchOfflineMemories } from '@/lib/offline-search'
+import { sanitizeSearchQuery } from '@/lib/search-utils'
+import { formatDate, formatUrl } from '@/lib/format-utils'
 
 export function MemorySearch() {
     const [query, setQuery] = useState('')
@@ -19,6 +21,7 @@ export function MemorySearch() {
     const [debouncedQuery, setDebouncedQuery] = useState('')
     const { isOnline } = useNetwork()
     const router = useRouter()
+    const searchInputRef = useRef<HTMLInputElement>(null)
 
     // Debounce search query (500ms as per docs)
     useEffect(() => {
@@ -36,13 +39,20 @@ export function MemorySearch() {
             return
         }
 
+        // Sanitize the search query for security
+        const sanitizedQuery = sanitizeSearchQuery(searchQuery)
+        if (!sanitizedQuery.trim()) {
+            setResult({ memories: [], loading: false, error: null })
+            return
+        }
+
         setResult(prev => ({ ...prev, loading: true, error: null }))
 
         try {
             // Use direct function calls to avoid any dynamic loading
             const memories = isOnline 
-                ? await new OnlineSearchService().searchMemories(searchQuery)
-                : await searchOfflineMemories(searchQuery)
+                ? await new OnlineSearchService().searchMemories(sanitizedQuery)
+                : await searchOfflineMemories(sanitizedQuery)
 
             setResult({ 
                 memories, 
@@ -65,37 +75,8 @@ export function MemorySearch() {
         searchMemories(debouncedQuery)
     }, [debouncedQuery, searchMemories])
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        })
-    }
-
-    const formatUrl = (url: string) => {
-        try {
-            const urlObj = new URL(url)
-            const domain = urlObj.hostname.replace('www.', '')
-            const path = urlObj.pathname
-            const formatted = domain + path
-            
-            if (formatted.length <= 30) {
-                return formatted
-            }
-            
-            // If too long, show domain + first part of path
-            const pathParts = path.split('/').filter(p => p)
-            if (pathParts.length > 0) {
-                const firstPath = '/' + pathParts[0]
-                return domain + firstPath + '...'
-            }
-            
-            return domain + '...'
-        } catch {
-            return url.length > 30 ? url.substring(0, 27) + '...' : url
-        }
-    }
+    // Mobile detection utility
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
     return (
         <div className="max-w-2xl mx-auto">
@@ -106,9 +87,21 @@ export function MemorySearch() {
                         <Search className="h-5 w-5 text-gray-400" />
                     </div>
                     <input
+                        ref={searchInputRef}
                         type="text"
                         placeholder="Search memories and tags..."
                         value={query}
+                        onFocus={() => {
+                            // Scroll search box to top on mobile when focused
+                            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                                setTimeout(() => {
+                                    searchInputRef.current?.scrollIntoView({ 
+                                        behavior: 'smooth', 
+                                        block: 'start' 
+                                    })
+                                }, 100)
+                            }
+                        }}
                         onChange={(e) => {
                             // Enhanced sanitization for XSS prevention
                             const sanitized = e.target.value
@@ -148,61 +141,67 @@ export function MemorySearch() {
                                 ? `No memories found for "${query}"` 
                                 : `Found ${result.memories.length} memory(s)`
                             }
+                            {!isOnline && (
+                                <span className="text-orange-600 text-xs ml-2">
+                                    📱 Searching offline cached memories
+                                </span>
+                            )}
                         </p>
 
                         <div className="space-y-2">
                             {result.memories.map((memory) => (
                                 <div key={memory.id} className="border rounded p-3 hover:bg-gray-50">
-                                    <div className="flex items-center justify-between gap-3 text-sm">
-                                        {/* Left side: Date, Content, URL */}
-                                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                                            {/* Date */}
-                                            <span className="text-gray-500 font-mono text-xs whitespace-nowrap">
-                                                {formatDate(memory.memory_date)}
-                                            </span>
+                                    {/* Mobile and Desktop Layout */}
+                                    <div className="md:flex md:items-center md:justify-between md:gap-3 text-sm space-y-2 md:space-y-0">
+                                        {/* Main Content */}
+                                        <div className="md:flex md:items-center md:gap-3 md:flex-1 md:min-w-0 space-y-1 md:space-y-0">
+                                            {/* Date and Content Row */}
+                                            <div className="flex items-start gap-3">
+                                                {/* Date */}
+                                                <span className="text-gray-500 font-mono text-xs whitespace-nowrap flex-shrink-0">
+                                                    {formatDate(memory.memory_date, isMobile)}
+                                                </span>
+                                                
+                                                {/* Content */}
+                                                <span className="text-gray-900 flex-1 text-left break-words">
+                                                    {highlightPartialMatches(memory.content, query, {
+                                                        highlightClassName: 'bg-blue-200 text-blue-900 px-1 rounded font-medium'
+                                                    })}
+                                                </span>
+                                            </div>
                                             
-                                            {/* Context (Content) */}
-                                            <span className="text-gray-900 flex-1 truncate text-left">
-                                                {highlightPartialMatches(memory.content, query, {
-                                                    highlightClassName: 'bg-blue-200 text-blue-900 px-1 rounded font-medium'
-                                                })}
-                                            
-                                            {/* URL */}
+                                            {/* URL Row (if exists) */}
                                             {memory.url && (
-                                                <>
-                                                    {' '}
+                                                <div className="md:inline md:ml-3">
                                                     <a 
                                                         href={memory.url} 
                                                         target="_blank" 
                                                         rel="noopener noreferrer"
-                                                        className="text-blue-600 hover:text-blue-800 text-xs whitespace-nowrap flex-shrink-0 hover:underline"
+                                                        className="text-blue-600 hover:text-blue-800 text-xs hover:underline break-all"
                                                     >
                                                         {highlightPartialMatches(formatUrl(memory.url), query, {
                                                             highlightClassName: 'bg-blue-300 text-blue-900 px-1 rounded font-medium'
                                                         })}
                                                     </a>
-                                                </>
-                                            )}
-                                            </span>
-                                        </div>
-                                        
-                                        {/* Right side: Tags and Edit Button */}
-                                        <div className="flex items-center gap-2 flex-shrink-0">
-                                            {/* Tags */}
-                                            {memory.tags.length > 0 && (
-                                                <div className="flex gap-1">
-                                                    {memory.tags.map((tag, index) => (
-                                                        <span 
-                                                            key={index}
-                                                            className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800"
-                                                        >
-                                                            {highlightPartialMatches(`${tag.key}:${tag.value}`, query, {
-                                                                highlightClassName: 'bg-blue-300 text-blue-900 px-0.5 rounded font-medium'
-                                                            })}
-                                                        </span>
-                                                    ))}
                                                 </div>
                                             )}
+                                        </div>
+                                        
+                                        {/* Tags and Edit Button Row */}
+                                        <div className="flex items-center justify-between gap-2">
+                                            {/* Tags */}
+                                            <div className="flex flex-wrap gap-1">
+                                                {memory.tags.map((tag, index) => (
+                                                    <span 
+                                                        key={index}
+                                                        className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800"
+                                                    >
+                                                        {highlightPartialMatches(`${tag.key}:${tag.value}`, query, {
+                                                            highlightClassName: 'bg-blue-300 text-blue-900 px-0.5 rounded font-medium'
+                                                        })}
+                                                    </span>
+                                                ))}
+                                            </div>
                                             
                                             {/* Edit Button */}
                                             <button 

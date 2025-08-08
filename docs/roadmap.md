@@ -11,7 +11,7 @@
 | [Offline Support](#offline-support)               |       | ✅    | 📋    |       | P1       |
 | [Memory Export](#memory-export)                   |       |       | 📋    |       | P2       |
 | [Testing Infrastructure](#testing-infrastructure) |       | ✅    | 📋    |       | P1       |
-| [Tag Suggestion](#tag-suggestion)                 |       | 📋    |       |       | P1       |
+| [Tag Suggestion](#tag-suggestion)                 |       | 🟡    |       |       | P1       |
 | [Tag Management](#tag-management)                 |       |       | 📋    |       | P1       |
 | instamem-server repo                              |       |       | 📋    |       | P2       |
 | [Semantic Search](#semantic-search)               |       |       | 💭    |       | P2       |
@@ -109,7 +109,7 @@
 
 ### Testing Infrastructure
 
--   **0.2.0:** Minimum to test data and core functionality - see [tests](tests.md) for strategy.
+-   **0.2.0:** unit and end-to-end (e2e) tests to test data and core functionality - see [tests](tests.md) for strategy.
 -   **Learning:** Testing patterns, mocking strategies, CI/CD integration
 
 ### Performance Monitoring
@@ -136,4 +136,4 @@
 
 Stuff that needs to be addressed or fleshed out
 
--   mobile view is bad - nav bar needs work
+-   if search term is "feel" then only "feel" should be highlighted in results. Right now individual chars like "f" are highlighted. 

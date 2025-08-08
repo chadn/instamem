@@ -51,8 +51,11 @@ test.describe('Search Functionality', () => {
             console.log('✅ Found search help text')
         }
         
-        // Check for user info in header
-        await expect(page.locator('text=test@instamem.local')).toBeVisible()
+        // Check for user info in header (partial email display)
+        await expect(page.locator('text=test@')).toBeVisible()
+        
+        // Open user menu to access sign out
+        await page.locator('text=test@').click()
         await expect(page.locator('text=Sign out')).toBeVisible()
         
         // Take screenshot of the search interface

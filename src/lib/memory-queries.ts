@@ -202,6 +202,40 @@ export async function updateMemory(
 }
 
 /**
+ * Delete a memory and all its associated tags
+ */
+export async function deleteMemory(
+    supabase: SupabaseClient,
+    id: string
+): Promise<void> {
+    try {
+        // 1. First delete memory_tag relationships (foreign key constraint)
+        const { error: tagRelationError } = await supabase
+            .from('memory_tag')
+            .delete()
+            .eq('memory_id', id)
+
+        if (tagRelationError) {
+            throw new Error(`Failed to delete memory tag relationships: ${tagRelationError.message}`)
+        }
+
+        // 2. Delete the memory itself
+        const { error: memoryError } = await supabase
+            .from('memories')
+            .delete()
+            .eq('id', id)
+
+        if (memoryError) {
+            throw new Error(`Failed to delete memory: ${memoryError.message}`)
+        }
+
+    } catch (error) {
+        console.error('Error deleting memory:', error)
+        throw error
+    }
+}
+
+/**
  * Create a new memory with content, date, url, and tags
  */
 export async function createMemory(

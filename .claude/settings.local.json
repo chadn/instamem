@@ -25,7 +25,8 @@
       "Bash(curl:*)",
       "Bash(cp:*)",
       "Bash(grep:*)",
-      "Bash(./scripts/demo-cli.sh:*)"
+      "Bash(./scripts/demo-cli.sh:*)",
+      "Bash(npx playwright test:*)"
     ],
     "deny": []
   }
