@@ -10,7 +10,7 @@
 | [Basic UI](#basic-ui)                             | ✅    | ✅    |       |       | P0       |
 | [Offline Support](#offline-support)               |       | ✅    | 📋    |       | P1       |
 | [Memory Export](#memory-export)                   |       |       | 📋    |       | P2       |
-| [Testing Infrastructure](#testing-infrastructure) |       | ✅    | 📋    |       | P1       |
+| [Testing Infrastructure](#testing-infrastructure) |       | 🟡    | 📋    |       | P1       |
 | [Tag Suggestion](#tag-suggestion)                 |       | 🟡    |       |       | P1       |
 | [Tag Management](#tag-management)                 |       |       | 📋    |       | P1       |
 | instamem-server repo                              |       |       | 📋    |       | P2       |
@@ -109,7 +109,9 @@
 
 ### Testing Infrastructure
 
--   **0.2.0:** unit and end-to-end (e2e) tests to test data and core functionality - see [tests](tests.md) for strategy.
+-   **0.2.0:** ✅ unit and end-to-end (e2e) tests to test data and core functionality - see [tests](tests.md) for strategy.
+-   **0.2.0:** 🟡 Consider create github actions that runs new playwright tests against instamem-dev.vercel.app whenever dev branch is updated. Needs to wait till vercel builds.
+-   **0.?** Lighthouse - audits web applications for performance, accessibility, SEO, and PWA readiness
 -   **Learning:** Testing patterns, mocking strategies, CI/CD integration
 
 ### Performance Monitoring
@@ -136,4 +138,7 @@
 
 Stuff that needs to be addressed or fleshed out
 
--   if search term is "feel" then only "feel" should be highlighted in results. Right now individual chars like "f" are highlighted. 
+-   IMPROVEMENT: if search term is "feel" then only "feel" should be highlighted in results. Right now individual chars like "f" are highlighted. 
+-   IMPROVEMENT: should sync before and after every edit or create memory. 
+-   IMPROVEMENT: browser warning: A form field element should have an id or name attribute (violator is input for tags, label for tags also should be fixed, see TagInput)
+-   BUG: Switching from online to offline on main page works, can continue to search. If in create/edit page, and go to offline, going back to homepage to search does not work, just shows blank page (/ or /login are both blank)

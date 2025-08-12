@@ -4,16 +4,24 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Memory } from '@/types/memory'
 import { MemoryForm } from '@/components/memory-form'
+import { OfflineNotice } from '@/components/offline-notice'
 import { createMemory } from '@/lib/memory-queries'
 import { createClient } from '@/lib/supabase-browser'
+import { useNetwork } from '@/providers/network-provider'
 
 export function CreateMemoryClient() {
     const router = useRouter()
+    const { isOffline } = useNetwork()
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [showErrorModal, setShowErrorModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
+    
+    // Show offline notice if user is offline
+    if (isOffline) {
+        return <OfflineNotice action="create new memories" />
+    }
     
     const handleSave = async (memoryData: Partial<Memory>) => {
         setSaving(true)

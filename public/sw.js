@@ -2,7 +2,7 @@
 // Version 0.2.0 - Basic offline support
 
 // Note: CACHE_NAME is auto-updated to match the version in package.json by scripts/inject-sw-version.js
-const CACHE_NAME = 'instamem-v0.1.9'
+const CACHE_NAME = 'instamem-v0.1.10'
 const STATIC_CACHE_URLS = [
     '/',
     '/login',

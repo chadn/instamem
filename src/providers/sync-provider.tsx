@@ -40,11 +40,15 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
 
   // Auto-sync when user comes online or changes
   useEffect(() => {
+    console.log('🔄 [SyncProvider] Auto-sync effect triggered - user:', !!user, 'isOnline:', isOnline)
     if (user && isOnline) {
+      console.log('🚀 [SyncProvider] Starting auto-sync for user:', user.id)
       // Ensure data is cached when user is online
       syncManager.ensureDataCached(user.id).catch(error => {
-        console.error('Auto-sync failed:', error)
+        console.error('❌ [SyncProvider] Auto-sync failed:', error)
       })
+    } else {
+      console.log('⏸️ [SyncProvider] Skipping auto-sync - user:', !!user, 'isOnline:', isOnline)
     }
   }, [user, isOnline])
 

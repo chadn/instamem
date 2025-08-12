@@ -21,11 +21,6 @@ export default async function EditMemoryPage({ params }: EditMemoryPageProps) {
     return (
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-2xl mx-auto px-4">
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Edit Memory</h1>
-                    <p className="text-gray-600 mt-1">Make changes to your memory details and tags</p>
-                </div>
-                
                 <EditMemoryClient memory={memory} />
             </div>
         </div>

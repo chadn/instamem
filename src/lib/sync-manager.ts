@@ -37,6 +37,7 @@ export class SyncManager {
    * Download all memories from Supabase and cache them locally
    */
   async syncMemories(userId: string): Promise<void> {
+    console.log('🔄 [SyncManager] syncMemories called for user:', userId)
     this.notifyListeners({ 
       status: 'syncing', 
       lastSync: null, 
@@ -45,7 +46,7 @@ export class SyncManager {
     })
 
     try {
-      console.log('🔄 Starting memory sync for user:', userId)
+      console.log('🔄 [SyncManager] Starting memory sync for user:', userId)
       
       // Step 1: Fetch all memories from Supabase (10%)
       this.notifyListeners({ 
@@ -111,18 +112,20 @@ export class SyncManager {
    */
   async ensureDataCached(userId: string): Promise<boolean> {
     try {
+      console.log('🔍 [SyncManager] ensureDataCached called for user:', userId)
       const hasCache = await offlineStorage.hasCachedData(userId)
+      console.log('📦 [SyncManager] hasCache result:', hasCache)
       
       if (!hasCache) {
-        console.log('📥 No cached data found, initiating sync...')
+        console.log('📥 [SyncManager] No cached data found, initiating sync...')
         await this.syncMemories(userId)
         return true
       }
 
-      console.log('✅ Cached data exists for user')
+      console.log('✅ [SyncManager] Cached data exists for user')
       return true
     } catch (error) {
-      console.error('❌ Failed to ensure data cached:', error)
+      console.error('❌ [SyncManager] Failed to ensure data cached:', error)
       return false
     }
   }

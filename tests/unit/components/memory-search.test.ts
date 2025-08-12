@@ -11,8 +11,8 @@ describe('MemorySearch utility functions', () => {
 
     it('should format dates in mobile mode with short format', () => {
       const result = formatDate('2025-08-01', true)
-      // Mobile format for current year: M/D
-      expect(result).toMatch(/^\d{1,2}\/\d{1,2}$/)
+      // Mobile format for current year: M/D/YY
+      expect(result).toMatch(/^\d{1,2}\/\d{1,2}\/\d{2}$/)
     })
 
     it('should format dates in mobile mode with year for different years', () => {

@@ -8,9 +8,10 @@ export const formatDate = (dateString: string, isMobile = false) => {
   const month = date.getMonth() + 1
   const day = date.getDate()
   
-  if (isMobile) {
+  // Temporarily using moble sring format for both mobile and desktop
+  if (true || isMobile) {
     // Mobile: simple format like 8/1/25 or 8/1 for current year
-    return year === currentYear ? `${month}/${day}` : `${month}/${day}/${year.toString().slice(-2)}`
+    return `${month}/${day}/${year.toString().slice(-2)}`
   }
   
   // Desktop: original format

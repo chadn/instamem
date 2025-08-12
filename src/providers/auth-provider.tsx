@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase-browser'
 import { registerServiceWorker } from '@/lib/service-worker'
+import { useNetwork } from '@/providers/network-provider'
 
 // Global promise to warm Fuse.js chunk
 let fuseWarmPromise: Promise<typeof import('fuse.js')> | null = null
@@ -42,12 +43,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const { isOnline } = useNetwork()
   const supabase = createClient()
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
+      // When offline, don't try to fetch user from Supabase - preserve current state
+      if (!isOnline) {
+        setLoading(false)
+        return
+      }
+      
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        setUser(user)
+      } catch (error) {
+        console.error('Auth error:', error)
+        // Only clear user if we're online and get an auth error
+        if (isOnline) {
+          setUser(null)
+        }
+      }
       setLoading(false)
     }
 
@@ -55,7 +71,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user ?? null)
+        // Only update auth state when online, unless it's a sign out
+        if (isOnline || event === 'SIGNED_OUT') {
+          setUser(session?.user ?? null)
+        }
         setLoading(false)
       }
     )
@@ -71,7 +90,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     warmFuseChunk()
 
     return () => subscription.unsubscribe()
-  }, [supabase])
+  }, [supabase, isOnline])
+
+  // Re-validate user when coming back online
+  useEffect(() => {
+    if (isOnline && !loading) {
+      const revalidateUser = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser()
+          setUser(user)
+        } catch (error) {
+          console.error('Revalidation error:', error)
+          setUser(null)
+        }
+      }
+      revalidateUser()
+    }
+  }, [isOnline, supabase, loading])
 
   const signIn = async (provider: 'google' | 'github') => {
     // Ensure we're fully signed out before starting new auth flow

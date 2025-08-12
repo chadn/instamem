@@ -139,6 +139,9 @@ Not recommended
     - Simple full sync on app startup
     - Clear cache option for debugging
 
+4. **Debug Support**
+    - TODO: implement code to make it easier to track service worker changes, trigger reloads, etc.
+
 ### Technical Implementation
 
 **Frontend Changes:**

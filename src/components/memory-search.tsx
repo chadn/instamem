@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { highlightPartialMatches } from '@/utils/searchHighlight'
 import { SearchResult } from '@/types/memory'
 import { useNetwork } from '@/providers/network-provider'
-import { OnlineSearchService } from '@/lib/search-service'
 import { searchOfflineMemories } from '@/lib/offline-search'
 import { sanitizeSearchQuery } from '@/lib/search-utils'
 import { formatDate, formatUrl } from '@/lib/format-utils'
@@ -34,25 +33,34 @@ export function MemorySearch() {
 
     // Search function using abstracted search service
     const searchMemories = useCallback(async (searchQuery: string) => {
+        console.log('🔍 [MemorySearch] Starting search for query:', searchQuery)
+        console.log('🌐 [MemorySearch] Network status - isOnline:', isOnline)
+        
         if (!searchQuery.trim()) {
+            console.log('📝 [MemorySearch] Empty query - clearing results')
             setResult({ memories: [], loading: false, error: null })
             return
         }
 
         // Sanitize the search query for security
         const sanitizedQuery = sanitizeSearchQuery(searchQuery)
+        console.log('🧹 [MemorySearch] Sanitized query:', sanitizedQuery)
+        
         if (!sanitizedQuery.trim()) {
+            console.log('⚠️ [MemorySearch] Query became empty after sanitization')
             setResult({ memories: [], loading: false, error: null })
             return
         }
 
+        console.log('⏳ [MemorySearch] Setting loading state')
         setResult(prev => ({ ...prev, loading: true, error: null }))
 
         try {
-            // Use direct function calls to avoid any dynamic loading
-            const memories = isOnline 
-                ? await new OnlineSearchService().searchMemories(sanitizedQuery)
-                : await searchOfflineMemories(sanitizedQuery)
+            console.log('🗄️ [MemorySearch] Calling searchOfflineMemories with:', sanitizedQuery)
+            // Always search local cache - sync is handled separately
+            const memories = await searchOfflineMemories(sanitizedQuery)
+            console.log('✅ [MemorySearch] Search completed, found memories:', memories.length)
+            console.log('📊 [MemorySearch] Memory results preview:', memories.slice(0, 2).map(m => ({ id: m.id, content: m.content.substring(0, 50) })))
 
             setResult({ 
                 memories, 
@@ -61,7 +69,7 @@ export function MemorySearch() {
             })
 
         } catch (error) {
-            console.error('Search error:', error)
+            console.error('❌ [MemorySearch] Search error:', error)
             setResult({ 
                 memories: [], 
                 loading: false, 
@@ -70,10 +78,21 @@ export function MemorySearch() {
         }
     }, [isOnline])
 
-    // Trigger search when debounced query changes
+    // Trigger search when debounced query changes (but not when isOnline changes if we have results)
     useEffect(() => {
         searchMemories(debouncedQuery)
     }, [debouncedQuery, searchMemories])
+
+    // When going offline, don't re-search if we already have results for current query
+    const prevOnline = useRef(isOnline)
+    useEffect(() => {
+        // Only re-search when coming back online (offline to online)
+        // Don't re-search when going offline if we have results
+        if (prevOnline.current === false && isOnline === true && debouncedQuery.trim()) {
+            searchMemories(debouncedQuery)
+        }
+        prevOnline.current = isOnline
+    }, [isOnline, debouncedQuery, searchMemories])
 
     // Mobile detection utility
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
@@ -206,11 +225,20 @@ export function MemorySearch() {
                                             {/* Edit Button */}
                                             <button 
                                                 onClick={() => router.push(`/memory/${memory.id}/edit`)}
-                                                className="p-1 hover:bg-gray-200 rounded flex-shrink-0 transition-colors"
+                                                className={`p-1 rounded flex-shrink-0 transition-colors ${
+                                                    isOnline 
+                                                        ? "hover:bg-gray-200" 
+                                                        : "cursor-not-allowed opacity-50"
+                                                }`}
                                                 aria-label="Edit memory"
-                                                title="Edit memory"
+                                                title={isOnline ? "Edit memory" : "Offline - editing disabled"}
+                                                disabled={!isOnline}
                                             >
-                                                <Edit className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+                                                <Edit className={`h-4 w-4 ${
+                                                    isOnline 
+                                                        ? "text-gray-500 hover:text-gray-700" 
+                                                        : "text-gray-400"
+                                                }`} />
                                             </button>
                                         </div>
                                     </div>
@@ -238,7 +266,13 @@ export function MemorySearch() {
                         <div className="flex-shrink-0 ml-4">
                             <button
                                 onClick={() => router.push('/memory/create')}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                                className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
+                                    isOnline
+                                        ? "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500"
+                                        : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                                }`}
+                                disabled={!isOnline}
+                                title={isOnline ? "Create new memory" : "Offline - creating disabled"}
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>

@@ -6,6 +6,7 @@ import { Memory } from '@/types/memory'
 import { MemoryForm } from '@/components/memory-form'
 import { updateMemory, deleteMemory } from '@/lib/memory-queries'
 import { createClient } from '@/lib/supabase-browser'
+import { useNetwork } from '@/providers/network-provider'
 
 interface EditMemoryClientProps {
     memory: Memory
@@ -13,6 +14,7 @@ interface EditMemoryClientProps {
 
 export function EditMemoryClient({ memory }: EditMemoryClientProps) {
     const router = useRouter()
+    const { isOffline } = useNetwork()
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -90,6 +92,19 @@ export function EditMemoryClient({ memory }: EditMemoryClientProps) {
     
     return (
         <>
+            {/* Dynamic page header */}
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold text-gray-900">
+                    {isOffline ? 'View Memory' : 'Edit Memory'}
+                </h1>
+                <p className="text-gray-600 mt-1">
+                    {isOffline 
+                        ? 'Viewing memory details in read-only mode while offline'
+                        : 'Make changes to your memory details and tags'
+                    }
+                </p>
+            </div>
+            
             <div className="bg-white rounded-lg shadow-sm border p-6">
                 {error && (
                     <div className="mb-4 bg-red-50 border border-red-200 rounded-md p-4">

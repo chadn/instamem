@@ -6,16 +6,20 @@ import { MemorySearch } from '@/components/memory-search'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { LightningIcon } from '@/components/icons'
+import { useNetwork } from '@/providers/network-provider'
 
 export default function Home() {
     const { user, loading } = useAuth()
+    const { isOnline } = useNetwork()
     const router = useRouter()
 
     useEffect(() => {
-        if (!loading && !user) {
+        // Only redirect to login when online and user is not authenticated
+        // When offline, preserve the current auth state to avoid unnecessary redirects
+        if (!loading && !user && isOnline) {
             router.push('/login')
         }
-    }, [user, loading, router])
+    }, [user, loading, router, isOnline])
 
     if (loading) {
         return (
@@ -48,8 +52,19 @@ export default function Home() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="text-center">
                     <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to InstaMem</h2>
-                    <p className="text-lg text-gray-600 mb-8">
+                    <p className="text-lg text-gray-600 mb-4">
                         Your personal memory assistant. Search through your memories instantly.
+                    </p>
+                    <p className="text-sm text-gray-500 mb-8">
+                        New to InstaMem?{' '}
+                        <a 
+                            href="https://github.com/chadn/instamem/blob/main/docs/usage.md" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                            View the usage guide →
+                        </a>
                     </p>
 
                     <MemorySearch />

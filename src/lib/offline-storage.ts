@@ -36,10 +36,25 @@ export class OfflineStorage {
    */
   async getCachedMemories(): Promise<RawMemoryData[]> {
     try {
+      console.log('🗄️ [OfflineStorage] Getting cached memories from localForage...')
       const memories = await localForage.getItem<RawMemoryData[]>(CACHE_KEYS.MEMORIES)
+      console.log('📦 [OfflineStorage] Raw localForage result:', memories ? `${memories.length} memories` : 'null/empty')
+      
+      if (memories && memories.length > 0) {
+        console.log('✅ [OfflineStorage] Found cached memories:', memories.length)
+        console.log('👀 [OfflineStorage] Sample memory structure:', {
+          firstMemory: memories[0],
+          keys: Object.keys(memories[0] || {}),
+          hasContent: !!memories[0]?.content,
+          hasTags: !!memories[0]?.memory_tag
+        })
+      } else {
+        console.log('⚠️ [OfflineStorage] No cached memories found in storage')
+      }
+      
       return memories || []
     } catch (error) {
-      console.error('❌ Failed to retrieve cached memories:', error)
+      console.error('❌ [OfflineStorage] Failed to retrieve cached memories:', error)
       return []
     }
   }

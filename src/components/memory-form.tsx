@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { CloudOff } from 'lucide-react'
 import { Memory, MemoryTag } from '@/types/memory'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { TagInput } from '@/components/ui/tag-input'
+import { useNetwork } from '@/providers/network-provider'
 
 const memoryFormSchema = z.object({
     content: z.string().min(1, 'Content is required').max(1000, 'Content must be less than 1000 characters'),
@@ -32,6 +34,7 @@ interface MemoryFormProps {
 }
 
 export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, loading = false }: MemoryFormProps) {
+    const { isOffline } = useNetwork()
     const [tags, setTags] = useState<MemoryTag[]>(initialData?.tags || [])
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     
@@ -93,7 +96,7 @@ export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, load
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
                     placeholder="What do you want to remember?"
-                    disabled={loading}
+                    disabled={loading || isOffline}
                 />
                 {errors.content && (
                     <p className="text-red-600 text-sm">{errors.content.message}</p>
@@ -109,7 +112,7 @@ export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, load
                     id="memory_date"
                     type="date"
                     {...register('memory_date')}
-                    disabled={loading}
+                    disabled={loading || isOffline}
                 />
                 {errors.memory_date && (
                     <p className="text-red-600 text-sm">{errors.memory_date.message}</p>
@@ -126,7 +129,7 @@ export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, load
                     type="url"
                     {...register('url')}
                     placeholder="https://example.com"
-                    disabled={loading}
+                    disabled={loading || isOffline}
                 />
                 {errors.url && (
                     <p className="text-red-600 text-sm">{errors.url.message}</p>
@@ -142,21 +145,36 @@ export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, load
                     value={tags}
                     onChange={setTags}
                     placeholder="Add tags (e.g., person:john, feeling:excited)"
-                    disabled={loading}
+                    disabled={loading || isOffline}
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                    Create new tags like <code className="bg-gray-100 px-1 rounded text-xs">place:Trader Joes</code> by typing comma then space
+                    Create new tags like <code className="bg-gray-100 px-1 rounded text-xs">place:Trader Joes</code> by typing comma then space to create.
                 </p>
                 {errors.tags && (
                     <p className="text-red-600 text-sm">{errors.tags.message}</p>
                 )}
             </div>
             
+            {/* Offline Notice */}
+            {isOffline && (
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start gap-3">
+                    <CloudOff className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                        <p className="text-sm font-medium text-orange-800">
+                            You&apos;re currently offline
+                        </p>
+                        <p className="text-sm text-orange-700 mt-1">
+                            All fields are read-only. Connect to the internet to {mode === 'edit' ? 'save changes' : 'create memories'}.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex gap-3 pt-4">
                 <Button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || isOffline}
                     className="flex-1"
                 >
                     {loading ? (
@@ -184,7 +202,7 @@ export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, load
                         type="button"
                         variant="destructive"
                         onClick={() => setShowDeleteConfirm(true)}
-                        disabled={loading}
+                        disabled={loading || isOffline}
                         className="bg-red-600 hover:bg-red-700 text-white"
                     >
                         Delete
@@ -220,7 +238,7 @@ export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, load
                                     onClick={() => setShowDeleteConfirm(false)}
                                     variant="outline"
                                     className="flex-1"
-                                    disabled={loading}
+                                    disabled={loading || isOffline}
                                 >
                                     Cancel
                                 </Button>
@@ -235,7 +253,7 @@ export function MemoryForm({ mode, initialData, onSave, onCancel, onDelete, load
                                     }}
                                     variant="destructive"
                                     className="flex-1 bg-red-600 hover:bg-red-700"
-                                    disabled={loading}
+                                    disabled={loading || isOffline}
                                 >
                                     {loading ? (
                                         <div className="flex items-center gap-2">

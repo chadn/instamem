@@ -26,7 +26,8 @@
       "Bash(cp:*)",
       "Bash(grep:*)",
       "Bash(./scripts/demo-cli.sh:*)",
-      "Bash(npx playwright test:*)"
+      "Bash(npx playwright test:*)",
+      "WebSearch"
     ],
     "deny": []
   }
