@@ -22,15 +22,12 @@ InstaMem is a simple, fast, and personal memory assistant. Just type a word, or 
 ## Technical Stack
 
 - **Framework:** Next.js 14 with App Router
+- **Languages:**  Typescript, shell/bash
 - **UI:** ShadCN UI + Tailwind CSS
 - **Database:** Supabase (PostgreSQL)
 - **Authentication:** Supabase Auth, RLS, Github + Google Login
 - **Offline Support:** PWA + IndexedDB + localforage + Fuse.js search
 - **Deployment:** Vercel
-
-## Architecture
-
-*See [Architecture Documentation](docs/technical/architecture.md) for detailed system design*
 
 ## Status
 
@@ -48,14 +45,7 @@ npm run dev
 
 ## Development
 
-**Basic Commands:**
-```bash
-npm run dev     # Start development server  
-npm run build   # Build for production
-npm run db      # Database management
-```
-
-**For comprehensive development guide,** including debugging, testing, code style, and deployment, see [Development Documentation](docs/technical/development.md).
+**For complete development commands,** including testing, database management, and debugging, see [Development Guide](docs/technical/development.md).
 
 ## Architecture
 

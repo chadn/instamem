@@ -1,6 +1,6 @@
 # InstaMem Testing Strategy
 
-**Quick Summary:** Multi-layered testing with comprehensive unit tests (109) and E2E tests (7 test files) covering business logic and full user workflows.
+**Quick Summary:** Multi-layered testing with comprehensive unit tests (133 total, 131 active) and E2E tests (58 total) covering business logic and full user workflows.
 
 ## Table of Contents
 
@@ -40,24 +40,9 @@
 
 ## Commands
 
+For complete testing command reference, see [Development Commands](technical/development.md#testing-commands) section.
+
 ### Available Now
-
-```bash
-# All tests
-npm test                  # Run unit + E2E tests
-npm run test:unit         # Unit tests only (~1s)
-npm run test:unit:watch   # Unit tests in watch mode
-npm run test:e2e          # E2E tests (~90s)
-npm run test:e2e:ui       # E2E interactive mode
-
-# Cross-browser testing
-npm run test:e2e:all-browsers  # Test Firefox, WebKit, mobile
-
-# Target specific E2E areas
-npm run test:e2e -- --grep "auth"      # Authentication flows
-npm run test:e2e -- --grep "search"    # Search functionality  
-npm run test:e2e -- --grep "memory"    # Memory management
-```
 
 ### Planned
 
@@ -148,8 +133,8 @@ npm run build              # ✅ Available now (includes type checking)
 
 ## Test Stats
 
-- **Unit Tests**: 109 tests passing (~1s runtime)
-- **E2E Tests**: 7 test files covering core workflows (~90s runtime)  
+- **Unit Tests**: 131 tests passing, 2 skipped = 133 total (~1s runtime)
+- **E2E Tests**: 48 passed, 3 failed, 7 skipped = 58 total (~90s runtime)  
 - **Coverage**: Meeting 60% thresholds (60% statements, 50% branches)
 
 ## Next Steps
@@ -165,9 +150,9 @@ npm run build              # ✅ Available now (includes type checking)
 
 ## Detailed Test Coverage
 
-### E2E Test Breakdown (36 tests total)
+### E2E Test Breakdown (58 tests total)
 
-#### Authentication Tests (5/5 passing ✅)
+#### Authentication Tests (4/5 passing - some intermittent failures)
 - **Location**: `tests/e2e/tests/auth/login.spec.ts`
 - Basic auth flow validation
 - Email login functionality  
@@ -175,7 +160,7 @@ npm run build              # ✅ Available now (includes type checking)
 - Test user credential verification
 - Authenticated user interface access
 
-#### Search Functionality Tests (16 tests ✅)
+#### Search Functionality Tests (Most tests passing - ~85% success rate)
 - **Location**: `tests/e2e/tests/search/search.spec.ts`
 - Search interface access and interaction
 - Online search with result verification
@@ -220,7 +205,7 @@ npm run build              # ✅ Available now (includes type checking)
 - Service worker availability and validation
 - Public asset accessibility (no login redirects)
 
-### Unit Test Coverage (109 tests total)
+### Unit Test Coverage (133 tests total)
 
 #### Core Business Logic
 - **Memory Operations**: `tests/unit/lib/memory-operations.test.ts` (7 tests)
@@ -231,11 +216,13 @@ npm run build              # ✅ Available now (includes type checking)
   - Database operations, CRUD functionality
 - **Search Utils**: `tests/unit/lib/search-utils.test.ts` (21 tests)
   - Search algorithms, filtering, formatting
-- **Component Logic**: `tests/unit/components/memory-search.test.ts` (11 tests)
+- **Component Logic**: `tests/unit/components/memory-search.test.ts` (9 active tests, 2 skipped)
   - Date/URL formatting, utility functions
+- **Offline Search**: `tests/unit/lib/offline-search.test.ts` (24 tests)
+  - Offline search functionality, Fuse.js integration, fallback behavior
 
 ### Test Infrastructure Quality
-- **E2E Success Rate**: Most tests passing (varies by run due to some intermittent issues)
-- **Unit Test Success Rate**: 109/109 passing (100%)
+- **E2E Success Rate**: 48/58 passing (83% - some intermittent failures under investigation)
+- **Unit Test Success Rate**: 131/131 active tests passing (100% - 2 tests skipped due to date formatting issues)
 - **Coverage Thresholds**: 60% statements, 50% branches (maintenance-first approach)
 - **Performance**: Unit tests ~1s, E2E tests ~90s

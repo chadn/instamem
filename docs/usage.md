@@ -6,6 +6,10 @@ InstaMem is your personal memory assistant that helps you instantly search and r
 
 InstaMem works like a personal search engine for your memories. Simply add memories as they happen, and use natural language search to find them later.
 
+![Welcome Screen](screenshots/mobile-screenshot-home.png)
+
+When you first open InstaMem, you'll see the welcome screen with a search bar and "Create Memory" button. New users get helpful tips and a link to this usage guide.
+
 ## Main Interface
 
 ![Search Interface](screenshots/mobile-screenshot-search-s.png)
@@ -81,7 +85,9 @@ Access account features via the user dropdown:
 
 ## Deleting Memories
 
-![Delete Confirmation](screenshots/mobile-screenshot-delete-memory.png)
+|  |  |
+| --- | ---- |
+| ![Delete Confirmation](screenshots/mobile-screenshot-delete-memory.png) | ![Memory Deleted](screenshots/mobile-screenshot-memory-deleted.png) |
 
 To remove a memory:
 
@@ -90,7 +96,6 @@ To remove a memory:
 3. **Confirm deletion**: Review the memory content in the confirmation dialog
 4. **Permanent action**: Deletions cannot be undone
 
-![Memory Deleted](screenshots/mobile-screenshot-memory-deleted.png)
 
 After deletion, you'll see a confirmation that the memory has been permanently removed.
 

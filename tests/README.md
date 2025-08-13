@@ -13,17 +13,13 @@
 
 ## 🚀 Quick Commands
 
+For complete testing commands, see [Development Commands](../docs/technical/development.md#testing-commands).
+
+**Essential Commands:**
 ```bash
-# Development (fast feedback)
-npm run test:unit:watch     # Watch mode (~1s per run)
-
-# Validation (before commit)  
-npm run test:unit           # Fast business logic tests (~1s)
-npm run lint               # Code quality
-npm run build              # Type checking
-
-# Full validation (CI/CD)
-npm test                   # Unit + E2E tests (~90s total)
+npm run test:unit:watch     # Development: Watch mode (~1s)
+npm run test:unit           # Pre-commit: Fast unit tests (~1s)
+npm test                   # Full validation: Unit + E2E (~90s)
 ```
 
 ## 📊 Current Status

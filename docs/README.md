@@ -2,6 +2,7 @@
 
 ## 📋 Core Documentation
 
+-   📚 [**Usage Guide**](usage.md) - Complete user guide with screenshots and feature walkthrough
 -   🗺️ [**Feature Roadmap**](roadmap.md) - Feature status table and development timeline
 -   📋 [**Changelog**](CHANGELOG.md) - Version history and release notes  
 -   📜 [**Original Specifications**](Spec.md) - Legacy specification document (replaced by current docs)

@@ -134,6 +134,24 @@ npm run db seed-test-user # Create test@instamem.local for running tests
 npm run memories     # CLI tool to add memories manually
 ```
 
+### Testing Commands
+```bash
+# All tests
+npm test                  # Run unit + E2E tests
+npm run test:unit         # Unit tests only (~1s)
+npm run test:unit:watch   # Unit tests in watch mode
+npm run test:e2e          # E2E tests (~90s)
+npm run test:e2e:ui       # E2E interactive mode
+
+# Cross-browser testing
+npm run test:e2e:all-browsers  # Test Firefox, WebKit, mobile
+
+# Target specific E2E areas
+npm run test:e2e -- --grep "auth"      # Authentication flows
+npm run test:e2e -- --grep "search"    # Search functionality  
+npm run test:e2e -- --grep "memory"    # Memory management
+```
+
 ## Project Structure
 
 ```
@@ -291,6 +309,21 @@ npx supabase gen types typescript --local > src/types/database.ts
 - TypeScript and JavaScript Language Features
 - ES7+ React/Redux/React-Native snippets
 - Tailwind CSS IntelliSense
+-   claude code, github copilot
+
+### Iterating with Service Workers
+
+When iterating over code changes, service worker may have old code and data cached that needs updating.
+
+- Hard refresh: Ctrl+Shift+R (Windows) / Cmd+Shift+R (Mac)
+- Disable cache: DevTools → Network tab → "Disable cache" checkbox
+- Chrome DevTools → Application tab → Storage → "Clear site data"
+- Incognito/Private window: Bypasses all caching
+
+For service worker specifically:
+
+-   DevTools → Application → Service Workers → "Update on reload"
+-   Or manually click "Unregister" to force re-registration
 
 ## Performance Considerations
 

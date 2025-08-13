@@ -49,9 +49,10 @@ export default function Home() {
                 </div>
             </header>
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="text-center">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to InstaMem</h2>
+                    <MemorySearch />
+                    <h2 className="text-3xl font-bold text-gray-900 mb-4 mt-6">Welcome to InstaMem</h2>
                     <p className="text-lg text-gray-600 mb-4">
                         Your personal memory assistant. Search through your memories instantly.
                     </p>
@@ -67,7 +68,6 @@ export default function Home() {
                         </a>
                     </p>
 
-                    <MemorySearch />
                 </div>
             </main>
         </div>

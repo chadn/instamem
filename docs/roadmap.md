@@ -4,15 +4,13 @@
 
 | Name                                              | 0.1.0 | 0.2.0 | 0.5.0 | 1.0.0 | Priority |
 | ------------------------------------------------- | ----- | ----- | ----- | ----- | -------- |
-| [Authentication](#authentication)                 | ✅    |       | 📋    |       | P0       |
-| [Memory Search](#memory-search)                   | ✅    | ✅    |       |       | P0       |
-| [Add Edit Memories](#add-edit-memories)           | ✅    | ✅    |       |       | P0       |
+| [Authentication](#authentication)                 | ✅    | ✅    | 📋    |       | P0       |
+| [Memory Search](#memory-search)                   | ✅    | ✅    | 💭    |       | P0       |
+| [Add Edit Memories](#add-edit-memories)           | ✅    | ✅    | 💭    |       | P0       |
 | [Basic UI](#basic-ui)                             | ✅    | ✅    |       |       | P0       |
 | [Offline Support](#offline-support)               |       | ✅    | 📋    |       | P1       |
-| [Memory Export](#memory-export)                   |       |       | 📋    |       | P2       |
-| [Testing Infrastructure](#testing-infrastructure) |       | 🟡    | 📋    |       | P1       |
-| [Tag Suggestion](#tag-suggestion)                 |       | 🟡    |       |       | P1       |
-| [Tag Management](#tag-management)                 |       |       | 📋    |       | P1       |
+| [Testing Infrastructure](#testing-infrastructure) |       | ✅    | 📋    |       | P1       |
+| [Tag Management](#tag-management)                 |       | ✅    | 📋    |       | P1       |
 | instamem-server repo                              |       |       | 📋    |       | P2       |
 | [Semantic Search](#semantic-search)               |       |       | 💭    |       | P2       |
 | [Multi-device Sync](#multi-device-sync)           |       |       |       | 💭    | P2       |
@@ -43,20 +41,26 @@
 ### [Authentication](features/authentication.md)
 
 -   **0.1.0:** User login via Google/GitHub using Supabase Auth
+-   **0.2.0:** Special email login via /login-email for manual test accounts
+-   **0.5.0:** User login via Linkedin/etc using Supabase Auth
 -   **Learning:** OAuth flows, JWT tokens, Row-Level Security policies
 
 ### [Memory Search](features/memory-search.md)
 
 -   **0.1.0:** Basic keyword search with real-time results
 -   **0.2.0:** Added search term highlighting in results
+-   **0.5.0:** Search results should include popular tags that match, then clicking on that tag will show memories with that tag
 -   **Learning:** Full-text search, PostgreSQL performance, real-time UI patterns
 
 ### Add Edit Memories
 
 -   **0.1.0:** Simple CLI-based memory creation (direct database insert), UI lists memories.
--   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory
+-   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory.  
+-   **0.2.0:** CLI-based tool to Bulk Edit. Can export all memories in json for editing, delete all memories for a user, then add edited memories.
+-   **0.2.0:** UI-based memory creating and deleting
 -   **0.2.0:** UI-based memory editing with sophisticated tag editing, dedicated edit pages, and advanced tag input with autocomplete
--   **0.5.0** AI-powered natural language parsing with LangChain, part of instamem-server repo
+-   **0.5.0:** AI-powered natural language parsing with LangChain, part of instamem-server repo
+-   **0.5.0:** JSON/CSV export of user memories from browser
 
 ### Basic UI
 
@@ -71,11 +75,6 @@
 -   **1.0.0:** Multi-device sync with conflict resolution
 -   **Learning:** 0.2.0=PWA/IndexedDB basics, 1.0.0=Sync patterns, 2.0.0=CRDTs
 
-### Memory Export
-
--   **0.5.0:** JSON/CSV export of user memories
--   **Learning:** Data formats, file handling in browser
-
 ### Semantic Search
 
 -   **1.0.0:** Vector similarity search using embeddings
@@ -86,15 +85,13 @@
 -   **2.0.0:** Real-time sync across devices with conflict resolution
 -   **Learning:** CRDTs, WebSocket/Server-Sent Events, distributed systems
 
-### Tag Suggestion
-
--   Tags shown in search results. Ex: search for "per" will show all matching tags, like ones starting with "person:" in an overlay below search box. User can use arrow keys to go up/down matching tags, enter to select. They can also click on one.
--   Tags with definitions (feeling) will show feeling and definition, in a similar overlay.
--   **Learning:** Data relationships, UI for hierarchical data, search UX
-
 ### Tag Management
 
--   Tag browsing interface, creation, editing, usage statistics
+-   **0.1.0:** Tags are shown in search results
+-   **0.2.0:** When creating or editing memory in UI, and typing in tag box, tag suggestions or shown (autocomplete) nudging users towards using same tags.
+-   **0.2.0:** When typing a "feeling:" tag, shows feeling name and definition, nudging users to using feelings more accurately.
+-   **0.5.0:** Consider tag clouds, or usage counts for tags, to nudge tag reuse.
+-   **0.5.0:** Search should include number or memories connected  tag clouds, or usage counts for tags, to nudge tag reuse.
 -   **Learning:** Data relationships, UI for hierarchical data, search UX
 
 ### Dark Mode
@@ -110,7 +107,7 @@
 ### Testing Infrastructure
 
 -   **0.2.0:** ✅ unit and end-to-end (e2e) tests to test data and core functionality - see [tests](tests.md) for strategy.
--   **0.2.0:** 🟡 Consider create github actions that runs new playwright tests against instamem-dev.vercel.app whenever dev branch is updated. Needs to wait till vercel builds.
+-   **0.?:** 📋 Consider create github actions that runs new playwright tests against instamem-dev.vercel.app whenever dev branch is updated. Needs to wait till vercel builds.
 -   **0.?** Lighthouse - audits web applications for performance, accessibility, SEO, and PWA readiness
 -   **Learning:** Testing patterns, mocking strategies, CI/CD integration
 

@@ -99,9 +99,9 @@ export function MemorySearch() {
 
     return (
         <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white rounded-lg shadow-sm border p-1">
                 {/* Search Input */}
-                <div className="relative mb-6">
+                <div className="relative mb-2 mt-4 mx-4">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Search className="h-5 w-5 text-gray-400" />
                     </div>
@@ -154,7 +154,7 @@ export function MemorySearch() {
 
                 {/* Search Results */}
                 {!result.loading && !result.error && query && (
-                    <div>
+                    <div className="mx-2">
                         <p className="text-sm text-gray-600 mb-4">
                             {result.memories.length === 0 
                                 ? `No memories found for "${query}"` 
@@ -167,49 +167,62 @@ export function MemorySearch() {
                             )}
                         </p>
 
-                        <div className="space-y-2">
+                        <div className="space-y-1 text-left">
                             {result.memories.map((memory) => (
-                                <div key={memory.id} className="border rounded p-3 hover:bg-gray-50">
-                                    {/* Mobile and Desktop Layout */}
-                                    <div className="md:flex md:items-center md:justify-between md:gap-3 text-sm space-y-2 md:space-y-0">
-                                        {/* Main Content */}
-                                        <div className="md:flex md:items-center md:gap-3 md:flex-1 md:min-w-0 space-y-1 md:space-y-0">
-                                            {/* Date and Content Row */}
-                                            <div className="flex items-start gap-3">
-                                                {/* Date */}
-                                                <span className="text-gray-500 font-mono text-xs whitespace-nowrap flex-shrink-0">
+                                <div key={memory.id} className="py-2 px-1 hover:bg-gray-50 rounded">
+                                    <div className="text-sm space-y-1">
+                                        {/* Row 1: Edit button + Date + Content + URL */}
+                                        <div className="flex items-start gap-2">
+                                            {/* Edit Button - moved to front */}
+                                            <button 
+                                                onClick={() => router.push(`/memory/${memory.id}/edit`)}
+                                                className={`p-1 rounded flex-shrink-0 transition-colors mt-0.5 ${
+                                                    isOnline 
+                                                        ? "hover:bg-gray-200" 
+                                                        : "cursor-not-allowed opacity-50"
+                                                }`}
+                                                aria-label="Edit memory"
+                                                title={isOnline ? "Edit memory" : "Offline - editing disabled"}
+                                                disabled={!isOnline}
+                                            >
+                                                <Edit className={`h-3 w-3 ${
+                                                    isOnline 
+                                                        ? "text-gray-500 hover:text-gray-700" 
+                                                        : "text-gray-400"
+                                                }`} />
+                                            </button>
+                                            
+                                            {/* Content Blob: Date + Content + URL */}
+                                            <div className="flex-1 min-w-0">
+                                                <span className="text-gray-500 font-mono text-xs mr-2">
                                                     {formatDate(memory.memory_date, isMobile)}
                                                 </span>
-                                                
-                                                {/* Content */}
-                                                <span className="text-gray-900 flex-1 text-left break-words">
+                                                <span className="text-gray-900">
                                                     {highlightPartialMatches(memory.content, query, {
                                                         highlightClassName: 'bg-blue-200 text-blue-900 px-1 rounded font-medium'
                                                     })}
                                                 </span>
+                                                {memory.url && (
+                                                    <>
+                                                        <span className="text-gray-400 mx-1">•</span>
+                                                        <a 
+                                                            href={memory.url} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className="text-blue-600 hover:text-blue-800 text-xs hover:underline break-words"
+                                                        >
+                                                            {highlightPartialMatches(formatUrl(memory.url), query, {
+                                                                highlightClassName: 'bg-blue-300 text-blue-900 px-1 rounded font-medium'
+                                                            })}
+                                                        </a>
+                                                    </>
+                                                )}
                                             </div>
-                                            
-                                            {/* URL Row (if exists) */}
-                                            {memory.url && (
-                                                <div className="md:inline md:ml-3">
-                                                    <a 
-                                                        href={memory.url} 
-                                                        target="_blank" 
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 hover:text-blue-800 text-xs hover:underline break-all"
-                                                    >
-                                                        {highlightPartialMatches(formatUrl(memory.url), query, {
-                                                            highlightClassName: 'bg-blue-300 text-blue-900 px-1 rounded font-medium'
-                                                        })}
-                                                    </a>
-                                                </div>
-                                            )}
                                         </div>
                                         
-                                        {/* Tags and Edit Button Row */}
-                                        <div className="flex items-center justify-between gap-2">
-                                            {/* Tags */}
-                                            <div className="flex flex-wrap gap-1">
+                                        {/* Row 2: Tags - left aligned with proper wrapping */}
+                                        {memory.tags.length > 0 && (
+                                            <div className="flex flex-wrap gap-1 ml-7">
                                                 {memory.tags.map((tag, index) => (
                                                     <span 
                                                         key={index}
@@ -221,26 +234,7 @@ export function MemorySearch() {
                                                     </span>
                                                 ))}
                                             </div>
-                                            
-                                            {/* Edit Button */}
-                                            <button 
-                                                onClick={() => router.push(`/memory/${memory.id}/edit`)}
-                                                className={`p-1 rounded flex-shrink-0 transition-colors ${
-                                                    isOnline 
-                                                        ? "hover:bg-gray-200" 
-                                                        : "cursor-not-allowed opacity-50"
-                                                }`}
-                                                aria-label="Edit memory"
-                                                title={isOnline ? "Edit memory" : "Offline - editing disabled"}
-                                                disabled={!isOnline}
-                                            >
-                                                <Edit className={`h-4 w-4 ${
-                                                    isOnline 
-                                                        ? "text-gray-500 hover:text-gray-700" 
-                                                        : "text-gray-400"
-                                                }`} />
-                                            </button>
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -250,7 +244,7 @@ export function MemorySearch() {
 
                 {/* Helpful prompt when no query */}
                 {!query && (
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mx-4 mt-4 mb-4">
                         <div className="flex-1">
                             <p className="text-sm text-gray-500">
                                 Try searching for people, places, events, or tags like &quot;people&quot;, &quot;feeling&quot;, or &quot;excited&quot;
@@ -274,9 +268,6 @@ export function MemorySearch() {
                                 disabled={!isOnline}
                                 title={isOnline ? "Create new memory" : "Offline - creating disabled"}
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
                                 Create Memory
                             </button>
                         </div>

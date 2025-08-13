@@ -1,6 +1,4 @@
-import { createClient } from '@/lib/supabase-browser'
-import { Memory, RawMemoryData, transformRawMemoryData, filterMemoriesByQuery } from '@/types/memory'
-import { buildMemorySearchQuery } from '@/lib/queries'
+import { Memory } from '@/types/memory'
 import { searchOfflineMemories } from '@/lib/offline-search'
 
 export interface SearchService {
@@ -18,8 +16,8 @@ export class OfflineSearchService implements SearchService {
 }
 
 /**
- * Factory function to create appropriate search service based on network status
+ * Factory function to create appropriate search service
  */
-export function createSearchService(isOnline: boolean): SearchService {
+export function createSearchService(): SearchService {
   return new OfflineSearchService()
 }

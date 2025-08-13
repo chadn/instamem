@@ -1,6 +1,6 @@
 # About
 
-Specs from convo with ChatGPT
+Original Specs from convo with ChatGPT, no longer maintained, should not be used for evaluating current state of the app.
 
 ## TODO/DONE
 

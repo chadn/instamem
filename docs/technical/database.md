@@ -106,27 +106,11 @@ All user data tables use Row-Level Security policies that automatically filter b
 
 ## Database Scripts
 
-### npm run db
+For complete database command reference, see [Development Commands](development.md#database-commands) section.
 
-```
-npm run db {setup|reset|check|seed}
-
-Commands:
-  setup  - Create database schema and seed initial data
-  reset  - Drop all tables and reset database
-  check  - Check database connection and schema status
-  seed   - Insert initial data only
-```
-
-### npm run memories
-
-Simple way to populate DB with memories
-
-```
-Usage:
-npm run memories list  # list users and tags for memory creating
-npm run memories scripts/memories-example.json
-```
+**Quick Reference:**
+- `npm run db setup` - Initialize database with schema and seed data
+- `npm run memories` - CLI tool to add memories manually
 
 ## Future Optimizations
 
