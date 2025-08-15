@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Unit and end-to-end (e2e) tests to test data and core functionality
 -   Tag autocomplete suggestions when creating or editing memories in UI
 -   Feeling tag definitions - when typing "feeling:" tags, shows feeling name and definition
+-   Auto-update of offline app (sw.js), including showing version number and timestamp of last update by Sign out
 
 ## [0.1.0] - 2025-07-25
 

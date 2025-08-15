@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Search, Edit } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { highlightPartialMatches } from '@/utils/searchHighlight'
+import { highlightExactMatches } from '@/utils/searchHighlight'
 import { SearchResult } from '@/types/memory'
 import { useNetwork } from '@/providers/network-provider'
 import { searchOfflineMemories } from '@/lib/offline-search'
@@ -198,7 +198,7 @@ export function MemorySearch() {
                                                     {formatDate(memory.memory_date, isMobile)}
                                                 </span>
                                                 <span className="text-gray-900">
-                                                    {highlightPartialMatches(memory.content, query, {
+                                                    {highlightExactMatches(memory.content, query, {
                                                         highlightClassName: 'bg-blue-200 text-blue-900 px-1 rounded font-medium'
                                                     })}
                                                 </span>
@@ -211,7 +211,7 @@ export function MemorySearch() {
                                                             rel="noopener noreferrer"
                                                             className="text-blue-600 hover:text-blue-800 text-xs hover:underline break-words"
                                                         >
-                                                            {highlightPartialMatches(formatUrl(memory.url), query, {
+                                                            {highlightExactMatches(formatUrl(memory.url), query, {
                                                                 highlightClassName: 'bg-blue-300 text-blue-900 px-1 rounded font-medium'
                                                             })}
                                                         </a>
@@ -228,7 +228,7 @@ export function MemorySearch() {
                                                         key={index}
                                                         className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800"
                                                     >
-                                                        {highlightPartialMatches(`${tag.key}:${tag.value}`, query, {
+                                                        {highlightExactMatches(`${tag.key}:${tag.value}`, query, {
                                                             highlightClassName: 'bg-blue-300 text-blue-900 px-0.5 rounded font-medium'
                                                         })}
                                                     </span>

@@ -6,12 +6,15 @@ import { GoogleIcon, GitHubIcon } from '@/components/icons'
 import { SyncStatus } from '@/components/sync-status'
 import { useRef, useState, useEffect } from 'react'
 import { useNetwork } from '@/providers/network-provider'
+import { getServiceWorkerVersion, getLastServiceWorkerUpdateAt } from '@/lib/service-worker'
 
 export function UserMenu() {
     const { user, signOut } = useAuth()
     const [open, setOpen] = useState(false)
     const menuRef = useRef<HTMLDivElement>(null)
     const { isOnline } = useNetwork()
+    const [swVersion, setSwVersion] = useState<string | null>(null)
+    const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null)
 
     // Close dropdown on outside click or escape
     useEffect(() => {
@@ -30,6 +33,15 @@ export function UserMenu() {
             document.removeEventListener('mousedown', handleClick)
             document.removeEventListener('keydown', handleKey)
         }
+    }, [open])
+
+    // When opening the menu, fetch SW version and last updated timestamp
+    useEffect(() => {
+        if (!open) return
+        getServiceWorkerVersion()
+            .then(setSwVersion)
+            .catch(() => setSwVersion(null))
+        setLastUpdatedAt(getLastServiceWorkerUpdateAt())
     }, [open])
 
     if (!user) return null
@@ -82,6 +94,24 @@ export function UserMenu() {
                     <div className="mb-2 w-full">
                         <SyncStatus />
                     </div>
+                    <div className="w-full border-t border-gray-200 my-2" />
+                    <div className="w-full text-xs text-gray-600 space-y-1">
+                        <div className="font-semibold text-gray-700">Developer</div>
+                        <div>Version: {swVersion ?? 'unknown'}</div>
+                        <div>
+                            Updated:{' '}
+                            {lastUpdatedAt
+                                ? new Intl.DateTimeFormat(undefined, {
+                                      year: 'numeric',
+                                      month: 'short',
+                                      day: '2-digit',
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                  }).format(lastUpdatedAt)
+                                : 'n/a'}
+                        </div>
+                    </div>
+                    <div className="w-full border-t border-gray-200 my-2" />
                     <button
                         onClick={signOut}
                         className="flex items-center space-x-2 w-full py-2 rounded hover:bg-gray-100 text-left text-sm text-red-600"

@@ -22,5 +22,5 @@ if (swSource !== newSwSource) {
     fs.writeFileSync(swPath, newSwSource, 'utf8')
     console.log(`Updated sw.js CACHE_NAME to instamem-v${version}`)
 } else {
-    console.log('sw.js CACHE_NAME already up to date.')
+    console.log(`sw.js already has CACHE_NAME=instamem-v${version}`)
 }

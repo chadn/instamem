@@ -42,7 +42,7 @@
 
 -   **0.1.0:** User login via Google/GitHub using Supabase Auth
 -   **0.2.0:** Special email login via /login-email for manual test accounts
--   **0.5.0:** User login via Linkedin/etc using Supabase Auth
+-   **0.5.0:** User login via Linkedin/Apple/etc using Supabase Auth
 -   **Learning:** OAuth flows, JWT tokens, Row-Level Security policies
 
 ### [Memory Search](features/memory-search.md)
@@ -55,7 +55,7 @@
 ### Add Edit Memories
 
 -   **0.1.0:** Simple CLI-based memory creation (direct database insert), UI lists memories.
--   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory.  
+-   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory.
 -   **0.2.0:** CLI-based tool to Bulk Edit. Can export all memories in json for editing, delete all memories for a user, then add edited memories.
 -   **0.2.0:** UI-based memory creating and deleting
 -   **0.2.0:** UI-based memory editing with sophisticated tag editing, dedicated edit pages, and advanced tag input with autocomplete
@@ -70,7 +70,8 @@
 
 ### [Offline Support](features/offline-support.md)
 
--   **0.2.0:** Read-only cached memories, basic PWA, offline search with Fuse.js
+-   **0.2.0:** Read-only cached memories, basic PWA, offline search with Fuse.js.
+-   **0.2.0:** Auto-update of app (sw.js), including version number and timestamp of last update
 -   **0.5.0:** Offline writes with sync queue
 -   **1.0.0:** Multi-device sync with conflict resolution
 -   **Learning:** 0.2.0=PWA/IndexedDB basics, 1.0.0=Sync patterns, 2.0.0=CRDTs
@@ -91,7 +92,7 @@
 -   **0.2.0:** When creating or editing memory in UI, and typing in tag box, tag suggestions or shown (autocomplete) nudging users towards using same tags.
 -   **0.2.0:** When typing a "feeling:" tag, shows feeling name and definition, nudging users to using feelings more accurately.
 -   **0.5.0:** Consider tag clouds, or usage counts for tags, to nudge tag reuse.
--   **0.5.0:** Search should include number or memories connected  tag clouds, or usage counts for tags, to nudge tag reuse.
+-   **0.5.0:** Search should include number or memories connected tag clouds, or usage counts for tags, to nudge tag reuse.
 -   **Learning:** Data relationships, UI for hierarchical data, search UX
 
 ### Dark Mode
@@ -106,7 +107,7 @@
 
 ### Testing Infrastructure
 
--   **0.2.0:** ✅ unit and end-to-end (e2e) tests to test data and core functionality - see [tests](tests.md) for strategy.
+-   **0.2.0:** ✅ unit and end-to-end (e2e) tests to test data and core functionality - see [tests](tests.md) for details.
 -   **0.?:** 📋 Consider create github actions that runs new playwright tests against instamem-dev.vercel.app whenever dev branch is updated. Needs to wait till vercel builds.
 -   **0.?** Lighthouse - audits web applications for performance, accessibility, SEO, and PWA readiness
 -   **Learning:** Testing patterns, mocking strategies, CI/CD integration
@@ -135,7 +136,9 @@
 
 Stuff that needs to be addressed or fleshed out
 
--   IMPROVEMENT: if search term is "feel" then only "feel" should be highlighted in results. Right now individual chars like "f" are highlighted. 
--   IMPROVEMENT: should sync before and after every edit or create memory. 
+-   "resum" search term has a result that does not contain "resum" - need a debug mode or tool to explain why. Ideally CLI memories search uses same code as browser, but with debug flag option to explain non exact matches.
+-   IMPROVEMENT: should sync before and after every edit or create memory.
 -   IMPROVEMENT: browser warning: A form field element should have an id or name attribute (violator is input for tags, label for tags also should be fixed, see TagInput)
--   BUG: Switching from online to offline on main page works, can continue to search. If in create/edit page, and go to offline, going back to homepage to search does not work, just shows blank page (/ or /login are both blank)
+-   BUG: (COMPLEX, DO LATER) Switching from online to offline on main page works, can continue to search. If in create/edit page, and go to offline, going back to homepage to search does not work, just shows blank page (/ or /login are both blank)
+-   BUG: after deleting a memory,  on "Memory Deleted" page it should sync data, then should go back to homepage. Currently sometimes goes back to edit memory page which yields 404. And search will show same memory just deleted since it was not sync'd.
+-   IMPROVEMENT: search results sorting - need to document. Most recently updated first?  Maybe create sort link that shows sort options: newest|oldest|updated|best 

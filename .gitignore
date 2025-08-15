@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# symlinks to AGENT.md
+CLAUDE.md
+.github/instructions/
+.cursorrules
