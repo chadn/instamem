@@ -16,7 +16,7 @@ When you first open InstaMem, you'll see the welcome screen with a search bar an
 
 The main interface shows:
 - **Search bar**: Enter keywords, people, places, or feelings to find memories
-- **Memory results**: Displays matching memories with dates and tags
+- **Search results**: Displays matching memories with dates and tags
 - **Tag chips**: Blue tags show categories like people, places, and feelings
 - **External links**: Click the arrow icon to open associated URLs
 

@@ -7,6 +7,7 @@ import { MemoryForm } from '@/components/memory-form'
 import { updateMemory, deleteMemory } from '@/lib/memory-queries'
 import { createClient } from '@/lib/supabase-browser'
 import { useNetwork } from '@/providers/network-provider'
+import { useSync } from '@/providers/sync-provider'
 
 interface EditMemoryClientProps {
     memory: Memory
@@ -15,6 +16,7 @@ interface EditMemoryClientProps {
 export function EditMemoryClient({ memory }: EditMemoryClientProps) {
     const router = useRouter()
     const { isOffline } = useNetwork()
+    const { forceSync } = useSync()
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -61,6 +63,12 @@ export function EditMemoryClient({ memory }: EditMemoryClientProps) {
         try {
             const supabase = createClient()
             await deleteMemory(supabase, memory.id)
+            
+            // Start sync in background to update cached data immediately
+            forceSync().catch(error => {
+                console.error('Failed to sync after deletion:', error)
+                // Don't block the UI if sync fails
+            })
             
             // Show delete success modal
             setShowDeleteSuccessModal(true)

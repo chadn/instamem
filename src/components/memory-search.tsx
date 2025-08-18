@@ -33,7 +33,6 @@ export function MemorySearch() {
 
     // Search function using abstracted search service
     const searchMemories = useCallback(async (searchQuery: string) => {
-        console.log('🔍 [MemorySearch] Starting search for query:', searchQuery)
         console.log('🌐 [MemorySearch] Network status - isOnline:', isOnline)
         
         if (!searchQuery.trim()) {
@@ -44,7 +43,7 @@ export function MemorySearch() {
 
         // Sanitize the search query for security
         const sanitizedQuery = sanitizeSearchQuery(searchQuery)
-        console.log('🧹 [MemorySearch] Sanitized query:', sanitizedQuery)
+        console.log(`🧹 [MemorySearch] Sanitized query: ${sanitizedQuery}`)
         
         if (!sanitizedQuery.trim()) {
             console.log('⚠️ [MemorySearch] Query became empty after sanitization')

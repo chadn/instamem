@@ -1,5 +1,5 @@
 // inject-sw-version.js
-// Updates the CACHE_NAME in public/sw.js to match the version in package.json
+// Updates the APP_VERSION in public/sw.js to match the version in package.json
 
 const fs = require('fs')
 const path = require('path')
@@ -14,13 +14,13 @@ const version = pkg.version
 const swSource = fs.readFileSync(swPath, 'utf8')
 
 const newSwSource = swSource.replace(
-    /CACHE_NAME = 'instamem-v\d+\.\d+\.\d+'/, // escape . for regex
-    `CACHE_NAME = 'instamem-v${version}'`
+    /APP_VERSION = 'instamem-\d+\.\d+\.[\-\.\d]+'/, // escape . for regex
+    `APP_VERSION = 'instamem-${version}'`
 )
 
 if (swSource !== newSwSource) {
     fs.writeFileSync(swPath, newSwSource, 'utf8')
-    console.log(`Updated sw.js CACHE_NAME to instamem-v${version}`)
+    console.log(`Updated sw.js APP_VERSION to instamem-v${version}`)
 } else {
-    console.log(`sw.js already has CACHE_NAME=instamem-v${version}`)
+    console.log(`sw.js already has APP_VERSION=instamem-v${version}`)
 }

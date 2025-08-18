@@ -140,5 +140,6 @@ Stuff that needs to be addressed or fleshed out
 -   IMPROVEMENT: should sync before and after every edit or create memory.
 -   IMPROVEMENT: browser warning: A form field element should have an id or name attribute (violator is input for tags, label for tags also should be fixed, see TagInput)
 -   BUG: (COMPLEX, DO LATER) Switching from online to offline on main page works, can continue to search. If in create/edit page, and go to offline, going back to homepage to search does not work, just shows blank page (/ or /login are both blank)
--   BUG: after deleting a memory,  on "Memory Deleted" page it should sync data, then should go back to homepage. Currently sometimes goes back to edit memory page which yields 404. And search will show same memory just deleted since it was not sync'd.
 -   IMPROVEMENT: search results sorting - need to document. Most recently updated first?  Maybe create sort link that shows sort options: newest|oldest|updated|best 
+-   IMPROVEMENT: on search results, click on tag to do a search on that tag
+-   BUG: "feeling:excited" search does not match memories with tag "feeling:excited"  but should.

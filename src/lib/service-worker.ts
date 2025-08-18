@@ -109,7 +109,7 @@ export function isPWA(): boolean {
 }
 
 /**
- * Get service worker version (CACHE_NAME) from the active controller
+ * Get service worker version (APP_VERSION) from the active controller
  */
 export async function getServiceWorkerVersion(): Promise<string | null> {
     if (typeof window === 'undefined' || !navigator.serviceWorker.controller) {

@@ -1,8 +1,8 @@
 // InstaMem Service Worker for basic caching
 // Version 0.2.0 - Basic offline support
 
-// Note: CACHE_NAME is auto-updated to match the version in package.json by scripts/inject-sw-version.js
-const CACHE_NAME = 'instamem-v0.1.12'
+// Note: APP_VERSION is auto-updated to match the version in package.json by scripts/inject-sw-version.js
+const APP_VERSION = 'instamem-0.1.13'
 const STATIC_CACHE_URLS = [
     '/',
     '/login',
@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
 
     event.waitUntil(
         caches
-            .open(CACHE_NAME)
+            .open(APP_VERSION)
             .then((cache) => {
                 console.log('📦 Caching static assets')
                 return cache.addAll(STATIC_CACHE_URLS)
@@ -37,7 +37,7 @@ self.addEventListener('activate', (event) => {
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
+                    if (cacheName !== APP_VERSION) {
                         console.log('🗑️ Deleting old cache:', cacheName)
                         return caches.delete(cacheName)
                     }
@@ -91,7 +91,7 @@ self.addEventListener('fetch', (event) => {
                         // Cache successful responses, especially JS chunks
                         if (networkResponse.status === 200) {
                             const responseClone = networkResponse.clone()
-                            caches.open(CACHE_NAME).then((cache) => {
+                            caches.open(APP_VERSION).then((cache) => {
                                 // Always cache Next.js static assets and chunks
                                 if (
                                     request.url.includes('/_next/static/') ||
@@ -138,8 +138,8 @@ self.addEventListener('message', (event) => {
     }
 
     if (event.data && event.data.type === 'GET_VERSION') {
-        event.ports[0].postMessage({ version: CACHE_NAME })
+        event.ports[0].postMessage({ version: APP_VERSION })
     }
 })
 
-console.log(`🔧 InstaMem Service Worker loaded ${CACHE_NAME}`)
+console.log(`🔧 InstaMem Service Worker loaded ${APP_VERSION}`)
