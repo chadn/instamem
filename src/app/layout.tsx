@@ -42,6 +42,7 @@ export default function RootLayout({
         <html lang="en">
             <head>
                 <link rel="manifest" href="/manifest.json" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 <NetworkProvider>

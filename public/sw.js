@@ -2,7 +2,7 @@
 // Version 0.2.0 - Basic offline support
 
 // Note: APP_VERSION is auto-updated to match the version in package.json by scripts/inject-sw-version.js
-const APP_VERSION = 'instamem-0.1.13'
+const APP_VERSION = 'instamem-0.1.14'
 const STATIC_CACHE_URLS = [
     '/',
     '/login',
