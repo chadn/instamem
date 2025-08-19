@@ -12,6 +12,7 @@ export interface Memory {
     url?: string
     created_at: string
     tags: MemoryTag[]
+    tagCombinations?: string[]  // Combined "key:value" strings for search
 }
 
 export interface SearchResult {
@@ -42,19 +43,24 @@ export interface RawMemoryData {
  * into flattened Memory objects suitable for UI consumption
  */
 export function transformRawMemoryData(rawMemories: RawMemoryData[]): Memory[] {
-    return rawMemories.map((memory) => ({
-        id: memory.id,
-        content: memory.content,
-        memory_date: memory.memory_date,
-        url: memory.url,
-        created_at: memory.created_at,
-        tags: (memory.memory_tag || [])
+    return rawMemories.map((memory) => {
+        const tags = (memory.memory_tag || [])
             .filter((mt) => mt.tag_values && mt.tag_values.tag_keys)
             .map((mt) => ({
                 key: mt.tag_values.tag_keys.name,
                 value: mt.tag_values.text
             }))
-    }))
+        
+        return {
+            id: memory.id,
+            content: memory.content,
+            memory_date: memory.memory_date,
+            url: memory.url,
+            created_at: memory.created_at,
+            tags,
+            tagCombinations: tags.map(tag => `${tag.key}:${tag.value}`)
+        }
+    })
 }
 
 /**

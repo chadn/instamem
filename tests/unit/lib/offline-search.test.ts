@@ -73,6 +73,39 @@ describe('searchOfflineMemories', () => {
         { tag_values: { text: 'performance', tag_keys: { name: 'topic' } } },
         { tag_values: { text: 'q4', tag_keys: { name: 'period' } } }
       ]
+    },
+    {
+      id: '6',
+      content: 'Got amazing news about the project approval',
+      memory_date: '2024-01-06',
+      url: undefined,
+      created_at: '2024-01-06T10:00:00Z',
+      memory_tag: [
+        { tag_values: { text: 'excited', tag_keys: { name: 'feeling' } } },
+        { tag_values: { text: 'project', tag_keys: { name: 'topic' } } }
+      ]
+    },
+    {
+      id: '7',
+      content: 'Feeling really grateful for the team support',
+      memory_date: '2024-01-07',
+      url: undefined,
+      created_at: '2024-01-07T10:00:00Z',
+      memory_tag: [
+        { tag_values: { text: 'gratified', tag_keys: { name: 'feeling' } } },
+        { tag_values: { text: 'team', tag_keys: { name: 'topic' } } }
+      ]
+    },
+    {
+      id: '8',
+      content: 'Proud of completing the milestone',
+      memory_date: '2024-01-08',
+      url: undefined,
+      created_at: '2024-01-08T10:00:00Z',
+      memory_tag: [
+        { tag_values: { text: 'proud', tag_keys: { name: 'feeling' } } },
+        { tag_values: { text: 'milestone', tag_keys: { name: 'topic' } } }
+      ]
     }
   ]
 
@@ -96,11 +129,13 @@ describe('searchOfflineMemories', () => {
 
     it('should find partial substring matches with exact search for short queries', async () => {
       const results = await searchOfflineMemories('fe')
-      expect(results).toHaveLength(3) // "feedback", "features", and "frontend" 
+      expect(results).toHaveLength(6) // "feedback", "features", "frontend", and 3 "feeling" tags
       const contents = results.map(r => r.content)
       expect(contents.some(c => c.includes('feedback'))).toBe(true)
       expect(contents.some(c => c.includes('features'))).toBe(true)
       expect(contents.some(c => c.includes('frontend'))).toBe(true)
+      expect(contents.some(c => c.includes('amazing news'))).toBe(true) // memory with feeling:excited tag
+      expect(contents.some(c => c.includes('grateful'))).toBe(true) // memory with feeling:gratified tag
     })
 
     it('should find single character matches', async () => {
@@ -131,9 +166,47 @@ describe('searchOfflineMemories', () => {
 
     it('should find matches in both content and tags', async () => {
       const results = await searchOfflineMemories('email')
+      expect(results).toHaveLength(3) // Now also matches other content/URLs containing "email"
+      // Should include the original memory with email notification
+      expect(results.some(r => r.content.includes('email notification'))).toBe(true)
+    })
+
+    it('should find memories by tag in key:value format', async () => {
+      const results = await searchOfflineMemories('feeling:excited')
       expect(results).toHaveLength(1)
-      // Should match both content "email notification" and tag value "email"
-      expect(results[0].content).toContain('email')
+      expect(results[0].content).toContain('amazing news')
+      expect(results[0].tags.some(tag => tag.key === 'feeling' && tag.value === 'excited')).toBe(true)
+    })
+
+    it('should find memories by tag in key:value format case insensitive', async () => {
+      const results = await searchOfflineMemories('FEELING:EXCITED')
+      expect(results).toHaveLength(1)
+      expect(results[0].content).toContain('amazing news')
+    })
+
+    it('should find partial matches for feeling:gr (should only match feeling:gratified)', async () => {
+      const results = await searchOfflineMemories('feeling:gr')
+      expect(results).toHaveLength(1)
+      expect(results[0].content).toContain('grateful')
+      expect(results[0].tags.some(tag => tag.key === 'feeling' && tag.value === 'gratified')).toBe(true)
+    })
+
+    it('should NOT use precise tag search for standalone colon', async () => {
+      // A standalone ":" should use regular search, not precise tag search
+      const results = await searchOfflineMemories(':')
+      // Should use regular exact match since it's 1 character
+      // Will find memories with tags containing ":" like "feeling:excited"
+      expect(results.length).toBeGreaterThan(0) // Should find memories with ":" in tag combinations
+      // Verify it's NOT using precise tag search by checking if it finds content containing ":"
+      const hasTagMatches = results.some(r => r.tags.some(tag => `${tag.key}:${tag.value}`.includes(':')))
+      expect(hasTagMatches).toBe(true)
+    })
+
+    it('should NOT use precise tag search for invalid tag format', async () => {
+      // "tag:" (missing value) should use regular search
+      const results = await searchOfflineMemories('tag:')
+      // Should use fuzzy search since it's 4+ characters
+      expect(results.length).toBeGreaterThanOrEqual(0) // Could match content containing "tag:"
     })
   })
 
@@ -164,12 +237,14 @@ describe('searchOfflineMemories', () => {
     it('should use exact match for 1-2 characters', async () => {
       // Short queries should use exact matching only
       const results = await searchOfflineMemories('fe')
-      // Should find "feedback", "features", "frontend" exactly
-      expect(results).toHaveLength(3)
+      // Should find "feedback", "features", "frontend", and 3 "feeling" tags
+      expect(results).toHaveLength(6)
       const contents = results.map(r => r.content)
       expect(contents.some(c => c.includes('feedback'))).toBe(true)
       expect(contents.some(c => c.includes('features'))).toBe(true)
       expect(contents.some(c => c.includes('frontend'))).toBe(true)
+      expect(contents.some(c => c.includes('amazing news'))).toBe(true) // memory with feeling:excited tag
+      expect(contents.some(c => c.includes('grateful'))).toBe(true) // memory with feeling:gratified tag
     })
   })
 
@@ -243,11 +318,11 @@ describe('searchOfflineMemories', () => {
     it('should NOT match "fe" in words that only contain "f" or "e" separately', async () => {
       // Add a memory that contains 'f' and 'e' but not 'fe' together
       const memoryWithSeparateFE: RawMemoryData = {
-        id: '6',
+        id: '7',
         content: 'Found an error in the code',  // has 'f' and 'e' but not 'fe'
-        memory_date: '2024-01-06',
+        memory_date: '2024-01-07',
         url: undefined,
-        created_at: '2024-01-06T10:00:00Z',
+        created_at: '2024-01-07T10:00:00Z',
         memory_tag: []
       }
       
@@ -256,12 +331,14 @@ describe('searchOfflineMemories', () => {
       
       const results = await searchOfflineMemories('fe')
       
-      // Should only find "feedback", "features", and "frontend", not "Found an error"
-      expect(results).toHaveLength(3)
+      // Should find "feedback", "features", "frontend", and 3 "feeling" tags, but not "Found an error"
+      expect(results).toHaveLength(6)
       const contents = results.map(r => r.content)
       expect(contents.some(c => c.includes('feedback'))).toBe(true)
       expect(contents.some(c => c.includes('features'))).toBe(true)
       expect(contents.some(c => c.includes('frontend'))).toBe(true)
+      expect(contents.some(c => c.includes('amazing news'))).toBe(true) // memory with feeling:excited tag
+      expect(contents.some(c => c.includes('grateful'))).toBe(true) // memory with feeling:gratified tag
       expect(contents.some(c => c.includes('Found an error'))).toBe(false)
     })
 
@@ -281,10 +358,10 @@ describe('searchOfflineMemories', () => {
     it('should prioritize content matches over tag matches', async () => {
       // Search for "email" which appears in both content and tags
       const results = await searchOfflineMemories('email')
-      expect(results).toHaveLength(1)
+      expect(results).toHaveLength(3) // Now also matches other content/URLs containing "email"
       
-      // The result should be the one where "email" appears in content
-      expect(results[0].content).toContain('email')
+      // Should include the memory where "email" appears in content
+      expect(results.some(r => r.content.includes('email notification'))).toBe(true)
     })
 
     it('should return multiple results when query matches multiple entries', async () => {

@@ -47,9 +47,9 @@
 
 ### [Memory Search](features/memory-search.md)
 
--   **0.1.0:** Basic keyword search with real-time results
+-   **0.1.0:** Basic keyword search with real-time results of matching memories
 -   **0.2.0:** Added search term highlighting in results
--   **0.5.0:** Search results should include popular tags that match, then clicking on that tag will show memories with that tag
+-   **0.5.0:** Search results should include matching tags then matching memories.  Clicking on a tag will add it to search bar, and results will update, only showing the 1 matching tag and memories results only include ones with that tag AND matching other search terms. 
 -   **Learning:** Full-text search, PostgreSQL performance, real-time UI patterns
 
 ### Add Edit Memories
@@ -142,4 +142,3 @@ Stuff that needs to be addressed or fleshed out
 -   BUG: (COMPLEX, DO LATER) Switching from online to offline on main page works, can continue to search. If in create/edit page, and go to offline, going back to homepage to search does not work, just shows blank page (/ or /login are both blank)
 -   IMPROVEMENT: search results sorting - need to document. Most recently updated first?  Maybe create sort link that shows sort options: newest|oldest|updated|best 
 -   IMPROVEMENT: on search results, click on tag to do a search on that tag
--   BUG: "feeling:excited" search does not match memories with tag "feeling:excited"  but should.

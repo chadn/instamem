@@ -59,8 +59,37 @@ export async function searchOfflineMemories(searchQuery: string): Promise<Memory
       tags: m.tags?.length || 0 
     })))
 
-    // Determine search strategy based on query length
+    // Determine search strategy based on query content and length
     const queryLength = searchQuery.trim().length
+    const searchLower = searchQuery.toLowerCase()
+    
+    // Special handling for tag searches (matches "tagkey:tagvalue" format)
+    if (/\w+:\w+/.test(searchLower)) {
+      console.log('🔍 [OfflineSearch] Using precise tag search for:', searchQuery)
+      const filteredMemories = transformedMemories.filter(memory => {
+        const contentMatch = memory.content.toLowerCase().includes(searchLower)
+        const urlMatch = memory.url && memory.url.toLowerCase().includes(searchLower)
+        const tagMatch = memory.tags.some(tag => {
+          const tagCombination = `${tag.key.toLowerCase()}:${tag.value.toLowerCase()}`
+          return tagCombination.startsWith(searchLower)
+        })
+        
+        if (contentMatch || urlMatch || tagMatch) {
+          console.log('📝 [OfflineSearch] Tag search match found:', {
+            contentMatch,
+            urlMatch,
+            tagMatch,
+            content: memory.content.substring(0, 50),
+            query: searchQuery
+          })
+        }
+        
+        return contentMatch || urlMatch || tagMatch
+      }).slice(0, 20)
+
+      console.log(`✅ [OfflineSearch] Tag search found ${filteredMemories.length} results`)
+      return filteredMemories
+    }
     
     if (queryLength <= 2) {
       // 1-2 characters: exact match only
@@ -69,10 +98,21 @@ export async function searchOfflineMemories(searchQuery: string): Promise<Memory
       const filteredMemories = transformedMemories.filter(memory => {
         const contentMatch = memory.content.toLowerCase().includes(searchLower)
         const urlMatch = memory.url && memory.url.toLowerCase().includes(searchLower)
-        const tagMatch = memory.tags.some(tag => 
-          tag.key.toLowerCase().includes(searchLower) ||
-          tag.value.toLowerCase().includes(searchLower)
-        )
+        const tagMatch = memory.tags.some(tag => {
+          const tagKey = tag.key.toLowerCase()
+          const tagValue = tag.value.toLowerCase()
+          const tagCombination = `${tagKey}:${tagValue}`
+          
+          // If search matches "tagkey:tagvalue" format, prioritize exact tag combination matching
+          if (/\w+:\w+/.test(searchLower)) {
+            return tagCombination.startsWith(searchLower)
+          }
+          
+          // Otherwise, search individual components and combinations
+          return tagKey.includes(searchLower) ||
+                 tagValue.includes(searchLower) ||
+                 tagCombination.includes(searchLower)
+        })
         
         if (contentMatch || urlMatch || tagMatch) {
           console.log('📝 [OfflineSearch] Exact match found:', {
@@ -97,9 +137,10 @@ export async function searchOfflineMemories(searchQuery: string): Promise<Memory
       const fuse = new Fuse(transformedMemories, {
         keys: [
           { name: 'content', weight: 0.7 },
-          { name: 'url', weight: 0.15 },
-          { name: 'tags.value', weight: 0.15 },
-          { name: 'tags.key', weight: 0.2 }
+          { name: 'url', weight: 0.1 },
+          { name: 'tags.value', weight: 0.1 },
+          { name: 'tags.key', weight: 0.1 },
+          { name: 'tagCombinations', weight: 0.2 }
         ],
         threshold: 0.4,  // Moderate threshold for fuzzy matching (0.0 = exact, 1.0 = match anything)
         distance: 100,   // Allow longer distance for fuzzy matching
@@ -137,10 +178,21 @@ export async function searchOfflineMemories(searchQuery: string): Promise<Memory
       const filteredMemories = transformedMemories.filter(memory => {
         const contentMatch = memory.content.toLowerCase().includes(searchLower)
         const urlMatch = memory.url && memory.url.toLowerCase().includes(searchLower)
-        const tagMatch = memory.tags.some(tag => 
-          tag.key.toLowerCase().includes(searchLower) ||
-          tag.value.toLowerCase().includes(searchLower)
-        )
+        const tagMatch = memory.tags.some(tag => {
+          const tagKey = tag.key.toLowerCase()
+          const tagValue = tag.value.toLowerCase()
+          const tagCombination = `${tagKey}:${tagValue}`
+          
+          // If search matches "tagkey:tagvalue" format, prioritize exact tag combination matching
+          if (/\w+:\w+/.test(searchLower)) {
+            return tagCombination.startsWith(searchLower)
+          }
+          
+          // Otherwise, search individual components and combinations
+          return tagKey.includes(searchLower) ||
+                 tagValue.includes(searchLower) ||
+                 tagCombination.includes(searchLower)
+        })
         
         if (contentMatch || urlMatch || tagMatch) {
           console.log('📝 [OfflineSearch] Match found:', {
