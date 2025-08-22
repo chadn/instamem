@@ -4,7 +4,7 @@ InstaMem is your personal memory assistant that helps you instantly search and r
 
 ## Getting Started
 
-InstaMem works like a personal search engine for your memories. Simply add memories as they happen, and use natural language search to find them later.
+InstaMem works like a personal search engine for your memories with **INSTANT results**. Data is stored locally so search results appear immediately as you type — no waiting, no loading delays. Simply add memories as they happen, and use natural language search to find them later.
 
 ![Welcome Screen](screenshots/mobile-screenshot-home.png)
 
@@ -15,22 +15,32 @@ When you first open InstaMem, you'll see the welcome screen with a search bar an
 ![Search Interface](screenshots/mobile-screenshot-search-s.png)
 
 The main interface shows:
-- **Search bar**: Enter keywords, people, places, or feelings to find memories
-- **Search results**: Displays matching memories with dates and tags
-- **Tag chips**: Blue tags show categories like people, places, and feelings
-- **External links**: Click the arrow icon to open associated URLs
+
+-   **Search bar**: Enter keywords, people, places, or feelings to find memories
+-   **Search results**: Displays matching memories with dates and tags
+-   **Tag chips**: Blue tags show categories like people, places, and feelings
+-   **External links**: Click the arrow icon to open associated URLs
 
 ### Search Features
 
-**Smart Search Types:**
-- **1-2 characters**: Exact matching (e.g., "s" finds entries containing "s")
-- **3+ characters**: Fuzzy matching (e.g., "feeback" will find "feedback")
-- **People**: Search by names like "Chad" or "John"
-- **Places**: Find memories by location like "Trader Joes"
-- **Feelings**: Search emotions like "excited", "proud", "gratified"
-- **Mixed search**: Combine multiple terms for precise results
+**INSTANT Search — Zero Latency Results:**
+- Results appear **immediately** as you type — literally instant, no delays
+- All data cached locally for maximum speed
+- Works perfectly offline with full search capabilities
 
-**Offline Support**: Search works even without internet connection using cached memories.
+**Smart Search Types:**
+
+-   **1-2 characters**: Exact matching (e.g., "s" finds entries containing "s")
+-   **3+ characters**: Fuzzy matching (e.g., "feeback" will find "feedback")
+-   **People**: Search by names like "Chad" or "John"
+-   **Places**: Find memories by location like "Trader Joes"
+-   **Feelings**: Search emotions like "excited", "proud", "gratified"
+-   **Mixed search**: Combine multiple terms for precise results
+
+**Advanced Tag Features (Coming Soon):**
+- **Tag-enhanced results** — see relevant tags in search results to quickly refine
+- **Click tags to search** — instant tag-based filtering
+- **Tag cloud management** — visual organization of your tag system
 
 ## Creating Memories
 
@@ -42,12 +52,18 @@ To add a new memory:
 2. **Memory Content**: Describe what happened in natural language
 3. **Date**: Set when the memory occurred (defaults to today)
 4. **URL (optional)**: Add links to related content, photos, or documents
-5. **Tags**: The AI automatically suggests relevant tags, or create your own
+5. **Tags**: The app suggests relevant tags from your existing tag library (plus feeling suggestions), or create your own
 
-**Tag Creation**: Type and press space/comma to create new tags. The system suggests categories like:
-- `person:john` for people
-- `place:Trader Joes` for locations  
-- `feeling:excited` for emotions
+**Customizable Tagging System**: Create your own tag categories to organize memories your way:
+
+-   `person:john` for people in your life
+-   `place:Trader Joes` for locations and experiences
+-   `feeling:excited` for emotions and moods
+-   `project:InstaMem` for work and personal projects
+-   `genre:jazz` for music, books, or entertainment
+-   `skill:programming` for learning and development
+
+Type and press space/comma to create new tags. The system learns your patterns and suggests relevant tags.
 
 **Smart Feeling Tags**: When adding emotion tags, InstaMem provides helpful definitions to help you choose the most accurate feeling. For example, you'll see distinctions between "excited" (enthusiastic anticipation) vs "elated" (extremely happy) vs "euphoric" (intense excitement).
 
@@ -64,10 +80,11 @@ When editing a memory:
 5. **Feeling definitions**: The dropdown shows different emotions with helpful descriptions to choose the most accurate feeling
 
 **Example feeling suggestions with definitions:**
-- `feeling: accomplished` - "Pleased and satisfied"
-- `feeling: proud` - "Feeling satisfaction in achievements" 
-- `feeling: affectionate` - "Showing fondness and care"
-- `feeling: disaffected` - "Dissatisfied and rebellious"
+
+-   `feeling: accomplished` - "Pleased and satisfied"
+-   `feeling: proud` - "Feeling satisfaction in achievements"
+-   `feeling: affectionate` - "Showing fondness and care"
+-   `feeling: disaffected` - "Dissatisfied and rebellious"
 
 The tag suggestion system learns from your previous entries and helps maintain consistency while the definitions ensure you pick the most precise emotional tags.
 
@@ -77,25 +94,24 @@ The tag suggestion system learns from your previous entries and helps maintain c
 
 Access account features via the user dropdown:
 
-- **Online status**: Shows connection and last sync time
-- **Sync**: Manually trigger synchronization of memories
-- **Sign out**: Log out of your account
+-   **Online status**: Shows connection and last sync time
+-   **Sync**: Manually trigger synchronization of memories
+-   **Sign out**: Log out of your account
 
 **Sync Status**: The app shows when you're online/offline and when data was last synchronized across devices.
 
 ## Deleting Memories
 
-|  |  |
-| --- | ---- |
+|                                                                         |                                                                     |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | ![Delete Confirmation](screenshots/mobile-screenshot-delete-memory.png) | ![Memory Deleted](screenshots/mobile-screenshot-memory-deleted.png) |
 
 To remove a memory:
 
 1. **Click the edit icon** on any memory
-2. **Select delete option** 
+2. **Select delete option**
 3. **Confirm deletion**: Review the memory content in the confirmation dialog
 4. **Permanent action**: Deletions cannot be undone
-
 
 After deletion, you'll see a confirmation that the memory has been permanently removed.
 
@@ -125,34 +141,38 @@ After deletion, you'll see a confirmation that the memory has been permanently r
 ## Offline Features
 
 InstaMem works offline for:
-- **Searching existing memories**: Full search functionality without internet
-- **Reading memories**: Browse your complete memory library from search results
-- **Viewing memory details**: Click edit buttons to view full memory content, tags, and details in read-only mode
 
-**Note**: Creating and editing memories requires an internet connection for AI-powered tag suggestions and cloud synchronization. When offline, the edit form becomes read-only for viewing.
+-   **Searching existing memories**: Full search functionality without internet
+-   **Reading memories**: Browse your complete memory library from search results
+-   **Viewing memory details**: Click edit buttons to view full memory content, tags, and details in read-only mode
+
+**Note**: Creating and editing memories requires an internet connection for tag suggestions and cloud synchronization. When offline, the edit form becomes read-only for viewing.
 
 ## Privacy & Security
 
-- **Personal data**: All memories are private to your account
-- **Cloud sync**: Data synchronizes securely across your devices
-- **Local storage**: Recent memories are cached locally for offline access
-- **Authentication**: Secure login protects your personal memories
+-   **Personal data**: All memories are private to your account
+-   **Cloud sync**: Data synchronizes securely across your devices
+-   **Local storage**: Recent memories are cached locally for offline access
+-   **Authentication**: Secure login protects your personal memories
 
 ## Troubleshooting
 
 **Search not finding memories?**
-- Try broader search terms
-- Check spelling (fuzzy search helps with typos)
-- Ensure memories are synced if on mobile
+
+-   Try broader search terms
+-   Check spelling (fuzzy search helps with typos)
+-   Ensure memories are synced if on mobile
 
 **Sync issues?**
-- Check internet connection
-- Try manual sync from user dropdown
-- Refresh the page if needed
+
+-   Check internet connection
+-   Try manual sync from user dropdown
+-   Refresh the page if needed
 
 **Missing memories?**
-- Verify you're logged into the correct account
-- Check if memories were created on another device and need sync
+
+-   Verify you're logged into the correct account
+-   Check if memories were created on another device and need sync
 
 ---
 

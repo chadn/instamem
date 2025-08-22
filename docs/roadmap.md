@@ -2,24 +2,26 @@
 
 ## Feature Status Table
 
-| Name                                              | 0.1.0 | 0.2.0 | 0.5.0 | 1.0.0 | Priority |
-| ------------------------------------------------- | ----- | ----- | ----- | ----- | -------- |
-| [Authentication](#authentication)                 | ✅    | ✅    | 📋    |       | P0       |
-| [Memory Search](#memory-search)                   | ✅    | ✅    | 💭    |       | P0       |
-| [Add Edit Memories](#add-edit-memories)           | ✅    | ✅    | 💭    |       | P0       |
-| [Basic UI](#basic-ui)                             | ✅    | ✅    |       |       | P0       |
-| [Offline Support](#offline-support)               |       | ✅    | 📋    |       | P1       |
-| [Testing Infrastructure](#testing-infrastructure) |       | ✅    | 📋    |       | P1       |
-| [Tag Management](#tag-management)                 |       | ✅    | 📋    |       | P1       |
-| instamem-server repo                              |       |       | 📋    |       | P2       |
-| [Semantic Search](#semantic-search)               |       |       | 💭    |       | P2       |
-| [Multi-device Sync](#multi-device-sync)           |       |       |       | 💭    | P2       |
-| [Dark Mode](#dark-mode)                           |       |       |       | 📋    | P3       |
-| [Keyboard Shortcuts](#keyboard-shortcuts)         |       |       |       | 📋    | P2       |
-| [Performance Monitoring](#performance-monitoring) |       |       |       | 📋    | P2       |
-| [Data Visualization](#data-visualization)         |       |       |       | 💭    | P2       |
-| [Advanced Analytics](#advanced-analytics)         |       |       |       | 💭    | P2       |
-| [API Access](#api-access)                         |       |       |       | 💭    | P2       |
+| Name                                              | 0.1.0 | 0.2.0 | 0.3.0 | 0.5.0 | 1.0.0 | Priority |
+| ------------------------------------------------- | ----- | ----- | ----- | ----- | ----- | -------- |
+| [Authentication](#authentication)                 | ✅    | ✅    |       | 📋    |       | P0       |
+| [Search](#search)                                 | ✅    | ✅    | 📋    | 📋    |       | P0       |
+| [Add Edit Memories](#add-edit-memories)           | ✅    | ✅    | 📋    | 📋    |       | P0       |
+| [Basic UI](#basic-ui)                             | ✅    | ✅    |       |       |       | P0       |
+| [Offline Support](#offline-support)               |       | ✅    |       | 📋    |       | P0       |
+| [Testing Infrastructure](#testing-infrastructure) |       | ✅    |       | 📋    |       | P1       |
+| [Tag Management](#tag-management)                 |       | ✅    | 📋    | 📋    |       | P1       |
+| [Demo Data](#demo-data)                           |       |       | 📋    | 📋    |       | P1       |
+| [Memory Import/Export UI](#memory-importexport)   |       |       | 📋    |       |       | P1       |
+| [instamem-server](#instamem-server)               |       |       |       | 📋    |       | P2       |
+| [Semantic Search](#semantic-search)               |       |       |       |       | 💭    | P2       |
+| [Multi-device Sync](#multi-device-sync)           |       |       |       |       | 💭    | P2       |
+| [Dark Mode](#dark-mode)                           |       |       |       |       | 📋    | P3       |
+| [Keyboard Shortcuts](#keyboard-shortcuts)         |       |       |       |       | 📋    | P3       |
+| [Performance Monitoring](#performance-monitoring) |       |       |       |       | 📋    | P3       |
+| [Data Visualization](#data-visualization)         |       |       |       |       | 💭    | P3       |
+| [Advanced Analytics](#advanced-analytics)         |       |       |       |       | 💭    | P3       |
+| [API Access](#api-access)                         |       |       |       |       | 💭    | P3       |
 
 ✅ Done  
 🟡 IN PROGRESS  
@@ -29,14 +31,50 @@
 **Versions:**
 
 -   **0.1.0 (MVP):** Core functionality, basic implementations
--   **0.2.0 (Enhanced):** Better UX, AI features, basic offline
--   **0.5.0 (AI updates db):** Create instamem-server with Langchain
--   **1.0.0 (Advanced):** Sophisticated features, full offline
--   **2.0.0 (Production):** Enterprise-ready, multi-device, security
+-   **0.2.0 (Enhanced):** Better UX, offline support, comprehensive testing
+-   **0.3.0 (Scale):** Large datasets, demo data, improved search UX, UI import/export
+-   **0.5.0 (AI):** Create instamem-server with LangChain for AI-assisted memory management
+-   **1.0.0 (Advanced):** Semantic search, multi-device sync
+-   **2.0.0 (Production):** Enterprise-ready, advanced features
 
 **Priority:** P0 = Must have, P1 = Important Sooner, P2 = Important, P3 = Nice to have
 
+## How Features Support the 4 Goals
+
+Each feature directly supports one or more of InstaMem's core goals:
+
+### 🚀 Goal 1: INSTANT Search + Offline
+
+-   **Search** - Core search functionality with zero-latency local results
+-   **Offline Support** - Essential for instant offline search capability
+-   **Demo Data** - Large datasets to test and showcase search performance
+-   **Memory Import/Export** - Bulk operations for managing large offline datasets
+
+### 🎯 Goal 2: Customizable Memories
+
+-   **Add Edit Memories** - Flexible memory creation with custom content
+-   **Tag Management** - Custom tag categories and organization
+-   **Demo Data** - Examples of extreme customization (1000+ unique tags)
+
+### 🤖 Goal 3: AI Assisted Memory Management
+
+-   **instamem-server** - Backend infrastructure for AI-powered features
+-   **Add Edit Memories** - AI-enhanced memory creation in 0.5.0
+
+### 🏷️ Goal 4: Advanced Tag Handling
+
+-   **Tag Management** - Smart tag autocomplete, relationships, and organization
+-   **Search** - Tag-enhanced search results and click-to-filter functionality
+-   **Demo Data** - Rich tag hierarchies and usage patterns
+
+**Supporting Infrastructure:**
+
+-   **Authentication, Basic UI, Testing** - Foundation for all goals
+-   **Multi-device Sync, Semantic Search** - Advanced capabilities building on core goals
+
 ## Feature Details
+
+Note some features have dedicated docs, click link to view.
 
 ### [Authentication](features/authentication.md)
 
@@ -45,20 +83,22 @@
 -   **0.5.0:** User login via Linkedin/Apple/etc using Supabase Auth
 -   **Learning:** OAuth flows, JWT tokens, Row-Level Security policies
 
-### [Memory Search](features/memory-search.md)
+### [Search](features/search.md)
 
 -   **0.1.0:** Basic keyword search with real-time results of matching memories
--   **0.2.0:** Added search term highlighting in results
--   **0.5.0:** Search results should include matching tags then matching memories.  Clicking on a tag will add it to search bar, and results will update, only showing the 1 matching tag and memories results only include ones with that tag AND matching other search terms. 
--   **Learning:** Full-text search, PostgreSQL performance, real-time UI patterns
+-   **0.2.0:** **INSTANT** offline-first search using cached data + Fuse.js; added search term highlighting in results; zero-latency local search
+-   **0.3.0:** **Large Dataset Creation** — Create and test with large datasets (1000+ memories) for UX experimentation
+-   **0.5.0:** **Advanced Tag Handling** — Search results include matching tags for quick refinement. Clicking on a tag adds it to search bar and instantly filters results to show only memories with that tag AND matching other search terms.
+-   **0.5.0:** **Large Dataset Performance** — Optimize search performance for 1000+ memories, implement efficient caching strategies
+-   **0.5.0:** **Enhanced Search UX** — Configurable search result sorting (newest/oldest/updated/best), debug mode for non-exact matches, improved search result ranking
+-   **Learning:** Full-text search, PostgreSQL performance, real-time UI patterns, instant local search optimization, large dataset optimization
 
 ### Add Edit Memories
 
 -   **0.1.0:** Simple CLI-based memory creation (direct database insert), UI lists memories.
 -   **0.2.0:** CLI-based tool to List/Add/Edit/Delete memory.
 -   **0.2.0:** CLI-based tool to Bulk Edit. Can export all memories in json for editing, delete all memories for a user, then add edited memories.
--   **0.2.0:** UI-based memory creating and deleting
--   **0.2.0:** UI-based memory editing with sophisticated tag editing, dedicated edit pages, and advanced tag input with autocomplete
+-   **0.2.0:** UI-based memory creating, deleting, and editing with sophisticated tag editing, dedicated edit pages, and advanced tag input with autocomplete
 -   **0.5.0:** AI-powered natural language parsing with LangChain, part of instamem-server repo
 -   **0.5.0:** JSON/CSV export of user memories from browser
 
@@ -89,11 +129,12 @@
 ### Tag Management
 
 -   **0.1.0:** Tags are shown in search results
--   **0.2.0:** When creating or editing memory in UI, and typing in tag box, tag suggestions or shown (autocomplete) nudging users towards using same tags.
+-   **0.2.0:** **Customizable tagging system** — When creating or editing memory in UI, tag suggestions appear (autocomplete) nudging users towards using same tags.
 -   **0.2.0:** When typing a "feeling:" tag, shows feeling name and definition, nudging users to using feelings more accurately.
--   **0.5.0:** Consider tag clouds, or usage counts for tags, to nudge tag reuse.
--   **0.5.0:** Search should include number or memories connected tag clouds, or usage counts for tags, to nudge tag reuse.
--   **Learning:** Data relationships, UI for hierarchical data, search UX
+-   **0.5.0:** **Tag cloud management** — Visual tag clouds with usage counts to help organize and manage your tag system.
+-   **0.5.0:** **Tag-enhanced search results** — Search includes relevant tags and memory counts. Click any tag to instantly filter results.
+-   **0.5.0:** **Smart tag suggestions** — Tag recommendations based on your existing tag patterns and memory content.
+-   **Learning:** Data relationships, UI for hierarchical data, search UX, instant tag-based filtering
 
 ### Dark Mode
 
@@ -107,10 +148,26 @@
 
 ### Testing Infrastructure
 
--   **0.2.0:** ✅ unit and end-to-end (e2e) tests to test data and core functionality - see [tests](tests.md) for details.
+-   **0.2.0:** ✅ Unit and end-to-end (E2E) tests to validate core functionality - see [tests](tests.md) for details.
 -   **0.?:** 📋 Consider create github actions that runs new playwright tests against instamem-dev.vercel.app whenever dev branch is updated. Needs to wait till vercel builds.
 -   **0.?** Lighthouse - audits web applications for performance, accessibility, SEO, and PWA readiness
 -   **Learning:** Testing patterns, mocking strategies, CI/CD integration
+
+### [Demo Data](features/demo-data.md)
+
+-   **0.3.0:** Rich demo accounts with extreme customization - 800+ memories with 1000+ unique tags across 4 use cases
+-   **0.5.0:** Performance validation - prove INSTANT search works with large datasets
+-   **Learning:** Content strategy, extreme customization examples, UX experimentation with large datasets, example-driven feature demonstration
+
+### Memory Import/Export
+
+-   **0.3.0:** UI-based memory import/export (JSON/CSV format) - extends existing CLI functionality to browser interface
+-   **0.3.0:** Bulk memory operations via UI - drag-and-drop import, export filtered results
+-   **Learning:** File handling in browser, data transformation, user experience for bulk operations
+
+### instamem-server
+
+-   **0.5.0:** Integrate backend that enables easier memory creation and management. Details will be in a separate repo, for now view more in [Architecture:instamem-server](architecture.md#instamem-server).
 
 ### Performance Monitoring
 
@@ -119,17 +176,17 @@
 
 ### Data Visualization
 
--   **2.0.0:** Charts for memory patterns, tag usage, timeline views
+-   **2.0.0:** Nice-to-have: Charts for memory patterns, tag usage, timeline views
 -   **Learning:** D3.js or charting libraries, data aggregation, visual design
 
 ### Advanced Analytics
 
--   **2.0.0:** Usage patterns, memory insights, personal dashboards
+-   **2.0.0:** Nice-to-have: Usage patterns, memory insights, personal dashboards
 -   **Learning:** Data visualization, analytics patterns, privacy-preserving metrics
 
 ### API Access
 
--   **2.0.0:** REST API for external integrations and mobile apps
+-   **2.0.0:** Nice-to-have: REST API for external integrations and mobile apps
 -   **Learning:** API design, authentication, rate limiting, documentation
 
 ## TODO
@@ -140,5 +197,9 @@ Stuff that needs to be addressed or fleshed out
 -   IMPROVEMENT: should sync before and after every edit or create memory.
 -   IMPROVEMENT: browser warning: A form field element should have an id or name attribute (violator is input for tags, label for tags also should be fixed, see TagInput)
 -   BUG: (COMPLEX, DO LATER) Switching from online to offline on main page works, can continue to search. If in create/edit page, and go to offline, going back to homepage to search does not work, just shows blank page (/ or /login are both blank)
--   IMPROVEMENT: search results sorting - need to document. Most recently updated first?  Maybe create sort link that shows sort options: newest|oldest|updated|best 
+-   IMPROVEMENT: search results sorting - need to document. Most recently updated first? Maybe create sort link that shows sort options: newest|oldest|updated|best
 -   IMPROVEMENT: on search results, click on tag to do a search on that tag
+
+-   IMPROVMENT: create demo accounts with lots of memories and tags to see how this could work
+    -   focus on DJs - song name, artist, etc in content, and use tags for genre, year, or other meta data https://support.mixo.dj/guide/rekordbox-to-mixo
+    -   find someone with lots of best-of lists, and add them. Best IMDB movies, top 100 songs of all time, fav restaurants, etc.

@@ -189,7 +189,7 @@ Not recommended
 
 ## Integration Points
 
-- **Memory Search component**: Switch between online/offline search modes
+- **Search component**: Switch between online/offline search modes
 - **Authentication system**: Sync only authenticated user's data
 - **Database schema**: Add sync metadata columns for conflict resolution, See [Enhanced Schema for Sync (0.5.0)](#enhanced-schema-for-sync-050)
 - **UI indicators**: Show offline status and sync progress

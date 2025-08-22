@@ -2,40 +2,54 @@
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [System Diagram](#system-diagram)
-- [Component Responsibilities](#component-responsibilities)
-  - [React Frontend (instamem)](#react-frontend-instamem)
-  - [LangChain API Server (instamem-server)](#langchain-api-server-instamem-server)
-  - [Supabase Database](#supabase-database)
-- [Data Flow](#data-flow)
-  - [Memory Search (Read Path)](#memory-search-read-path)
-  - [Memory Creation (Write Path)](#memory-creation-write-path)
-- [Technology Stack](#technology-stack)
-  - [Frontend](#frontend)
-  - [Backend](#backend)
-  - [Database](#database)
-- [Security Architecture](#security-architecture)
-  - [Authentication Flow](#authentication-flow)
-  - [Data Protection](#data-protection)
-- [Deployment Architecture](#deployment-architecture)
-  - [Production Environment](#production-environment)
-  - [Development Environment](#development-environment)
-- [Scalability Considerations](#scalability-considerations)
-  - [Current (0.1.0)](#current-010)
-  - [Future (1.0.0+)](#future-100)
-- [Migration Strategy](#migration-strategy)
-- [Investigations](#investigations)
-  - [Algolia for InstaMem: Analysis](#algolia-for-instamem-analysis)
+-   [Overview](#overview)
+-   [System Diagram](#system-diagram)
+-   [Component Responsibilities](#component-responsibilities)
+    -   [React Frontend (instamem)](#react-frontend-instamem)
+    -   [LangChain API Server (instamem-server)](#langchain-api-server-instamem-server)
+    -   [Supabase Database](#supabase-database)
+-   [Data Flow](#data-flow)
+    -   [Search (Read Path)](#search-read-path)
+    -   [Memory Creation (Write Path)](#memory-creation-write-path)
+-   [Technology Stack](#technology-stack)
+    -   [Frontend](#frontend)
+    -   [Backend](#backend)
+    -   [Database](#database)
+-   [Security Architecture](#security-architecture)
+    -   [Authentication Flow](#authentication-flow)
+    -   [Data Protection](#data-protection)
+-   [Deployment Architecture](#deployment-architecture)
+    -   [Production Environment](#production-environment)
+    -   [Development Environment](#development-environment)
+-   [Scalability Considerations](#scalability-considerations)
+    -   [Current (0.1.0)](#current-010)
+    -   [Future (1.0.0+)](#future-100)
+-   [Migration Strategy](#migration-strategy)
+-   [Investigations](#investigations)
+    -   [Algolia for InstaMem: Analysis](#algolia-for-instamem-analysis)
 
 ## Overview
 
-InstaMem follows a two-tier architecture with separate frontend and backend repositories, connected through a shared Supabase database.
+Current plan (as of 0.2.0) is to have 2 repos, instamem (this one) and instamem-server.
+
+### instamem
+
+**Current Architecture (0.2.0):** Single-repository Next.js application with Supabase backend, built on three core principles:
+
+1. **INSTANT Search** — Local-first data storage enables zero-latency search results
+2. **Customizable Memories** — Flexible content and user-defined tag categories
+3. **Advanced Tag Handling** — Smart tag management and search refinement (coming in 0.5.0)
+
+### instamem-server
+
+**Target Architecture (0.5.0+):** Two-tier architecture with separate frontend and backend repositories, connected through a shared Supabase database.
 
 ## System Diagram
 
+**Target Architecture (0.5.0+):**
+
 ```
-                   🧠 InstaMem System Architecture
+                   🧠 InstaMem Target Architecture
 
 ┌───────────────────────────┐                    ┌──────────────────────────┐
 │       React Frontend      │ ───── Auth ──────▶ │      Supabase DB         │
@@ -70,7 +84,7 @@ InstaMem follows a two-tier architecture with separate frontend and backend repo
 -   **User Interface**: ShadCN UI components with Tailwind CSS
 -   **Deployment**: Vercel with automatic deployments
 
-### LangChain API Server (instamem-server)
+### LangChain API Server (instamem-server) - **Planned for 0.5.0**
 
 -   **Memory Processing**: Natural language to structured data conversion
 -   **AI Integration**: OpenAI/LangChain for text parsing and tagging
@@ -87,15 +101,40 @@ InstaMem follows a two-tier architecture with separate frontend and backend repo
 
 ## Data Flow
 
-### Memory Search (Read Path)
+### Search
+
+**INSTANT Local Search:**
 
 1. User enters search query in React frontend
-2. Frontend queries Supabase directly with user's JWT
-3. RLS policies ensure user only sees their own memories
-4. Results returned with full-text search ranking
+2. **Zero-latency results** from locally cached data using Fuse.js
+3. No network calls required — all data stored in IndexedDB
+4. Results appear immediately as user types with fuzzy matching
 5. UI displays results with highlighting and tags
 
-### Memory Creation (Write Path)
+**Large Dataset Strategy:**
+
+**0.3.0 - Dataset Creation & UX Experimentation:**
+- **Demo data creation**: Generate 1000+ memories with diverse content types
+- **UX testing**: Experiment with search interface for large datasets
+- **User experience validation**: Test search workflows with realistic data volumes
+
+**0.5.0 - Performance Optimization:**
+- **Fuse.js optimization**: Configure search thresholds and indexes for 1000+ memories
+- **IndexedDB pagination**: Implement efficient data chunking for large datasets  
+- **Memory management**: Optimize React rendering for large result sets
+- **Search debouncing**: Fine-tune response times for different dataset sizes
+
+**Background Data Sync:**
+
+1. Sync fetches directly from Supabase with user's JWT
+2. Supabase RLS policies ensure user only sees their own memories
+3. Background sync keeps local cache updated with latest memories
+4. Manual sync button for immediate refresh
+5. Automatic sync when connectivity is restored
+
+### AI Memory Creation
+
+**Target for 0.5.0**
 
 1. User enters natural language text in React frontend
 2. Frontend sends text to LangChain API server
@@ -104,13 +143,27 @@ InstaMem follows a two-tier architecture with separate frontend and backend repo
 5. Database updates with proper user attribution via JWT
 6. Frontend receives confirmation and updates UI
 
+### Manual Memory Creation
+
+**Implemented in 0.2.0**
+
+1. User enters memory details in React frontend form
+2. Frontend sends structured data directly to Supabase
+3. User manually adds tags using autocomplete suggestions
+4. Database updates with proper user attribution via RLS
+
+or
+
+1. Admin uses CLI to bulk edit/create memories
+
 ## Technology Stack
 
 ### Frontend
 
--   **Framework**: Next.js 14 with App Router
+-   **Framework**: Next.js 15 with App Router
+-   **FED Library**: React 19
 -   **UI Library**: ShadCN UI + Tailwind CSS
--   **State Management**: React Context + TanStack Query
+-   **State Management**: React Context providers
 -   **Authentication**: Supabase Auth (@supabase/ssr)
 -   **Type Safety**: Full TypeScript with generated types
 
@@ -191,66 +244,77 @@ Each phase builds on the previous without requiring major architectural changes.
 
 ### Algolia for InstaMem: Analysis
 
-  What Algolia Would Provide:
+What Algolia Would Provide:
 
-  Instant Search Benefits:
-  - Sub-100ms search responses globally via their CDN
-  - Typo tolerance and fuzzy matching built-in
-  - Advanced ranking with customizable relevance
-  - Faceted search perfect for tag filtering
-  - Search analytics and performance insights
+Instant Search Benefits:
 
-  Developer Experience:
-  - InstantSearch UI components for React
-  - Real-time indexing via webhooks
-  - A/B testing for search relevance
-  - Dashboard for search analytics and tuning
+-   Sub-100ms search responses globally via their CDN
+-   Typo tolerance and fuzzy matching built-in
+-   Advanced ranking with customizable relevance
+-   Faceted search perfect for tag filtering
+-   Search analytics and performance insights
 
-  Architectural Fit:
-  ```
-  ┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
-  │  React Frontend │───▶│   Algolia    │    │  Supabase DB    │
-  │                 │    │   Search     │◀───│                 │
-  │ - UI components │    │   Index      │    │ - Auth/RLS      │
-  │ - InstantSearch │    │              │    │ - Memory CRUD   │
-  └─────────────────┘    └──────────────┘    └─────────────────┘
-  ```
-  Pros for InstaMem:
+Developer Experience:
 
-  ✅ Perfect for personal memory search:
-  - Handles InstaMem's core use case exceptionally well
-  - Natural language queries work better than SQL ILIKE
-  - Tag-based faceting is exactly what Algolia excels at
+-   InstantSearch UI components for React
+-   Real-time indexing via webhooks
+-   A/B testing for search relevance
+-   Dashboard for search analytics and tuning
 
-  ✅ Immediate performance gain:
-  - Eliminates the 500ms debounce need
-  - True real-time search as you type
-  - Scales effortlessly with memory volume
+Architectural Fit:
 
-  ✅ Enhanced search features:
-  - "Find memories about Sarah from coffee shops" would work intuitively
-  - Automatic highlighting of search terms
-  - Search suggestions and autocomplete
+```
+┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
+│  React Frontend │───▶│   Algolia    │    │  Supabase DB    │
+│                 │    │   Search     │◀───│                 │
+│ - UI components │    │   Index      │    │ - Auth/RLS      │
+│ - InstantSearch │    │              │    │ - Memory CRUD   │
+└─────────────────┘    └──────────────┘    └─────────────────┘
+```
 
-  Cons & Considerations:
+Pros for InstaMem:
 
-  ❌ Cost implications:
-  - Free tier: 10K search operations/month, 10K records
-  - Essential plan: $500/month for 250K operations, 100K records
-  - For personal use, likely fits free tier, but could scale quickly
+✅ Perfect for personal memory search:
 
-  ❌ Data privacy concerns:
-  - Personal memories stored on Algolia's servers
-  - Less control over data residency
-  - Additional data processing agreement needed
+-   Handles InstaMem's core use case exceptionally well
+-   Natural language queries work better than SQL ILIKE
+-   Tag-based faceting is exactly what Algolia excels at
 
-  ❌ Architecture complexity:
-  - Need to sync Supabase → Algolia
-  - Dual write operations (memory to DB + index to Algolia)
-  - Potential consistency issues between DB and search index
+✅ Immediate performance gain:
 
-  ❌ Offline capabilities:
-  - Algolia doesn't support offline search
-  - Would complicate the offline strategy significantly
+-   Eliminates the 500ms debounce need
+-   True real-time search as you type
+-   Scales effortlessly with memory volume
+
+✅ Enhanced search features:
+
+-   "Find memories about Sarah from coffee shops" would work intuitively
+-   Automatic highlighting of search terms
+-   Search suggestions and autocomplete
+
+Cons & Considerations:
+
+❌ Cost implications:
+
+-   Free tier: 10K search operations/month, 10K records
+-   Essential plan: $500/month for 250K operations, 100K records
+-   For personal use, likely fits free tier, but could scale quickly
+
+❌ Data privacy concerns:
+
+-   Personal memories stored on Algolia's servers
+-   Less control over data residency
+-   Additional data processing agreement needed
+
+❌ Architecture complexity:
+
+-   Need to sync Supabase → Algolia
+-   Dual write operations (memory to DB + index to Algolia)
+-   Potential consistency issues between DB and search index
+
+❌ Offline capabilities:
+
+-   Algolia doesn't support offline search
+-   Would complicate the offline strategy significantly
 
 More at https://www.algolia.com/doc/guides/building-search-ui/getting-started/react/

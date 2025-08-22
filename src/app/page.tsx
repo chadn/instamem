@@ -58,16 +58,15 @@ export default function Home() {
                     </p>
                     <p className="text-sm text-gray-500 mb-8">
                         New to InstaMem?{' '}
-                        <a 
-                            href="https://github.com/chadn/instamem/blob/main/docs/usage.md" 
-                            target="_blank" 
+                        <a
+                            href="https://github.com/chadn/instamem/blob/main/docs/usage.md#instamem-usage-guide"
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:text-blue-800 underline"
                         >
                             View the usage guide →
                         </a>
                     </p>
-
                 </div>
             </main>
         </div>

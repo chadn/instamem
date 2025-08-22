@@ -2,19 +2,19 @@
 
 ## Table of Contents
 
-- [Design Rationale](#design-rationale)
-- [Key Query Patterns](#key-query-patterns)
-  - [Memory Search](#memory-search)
-  - [Tag Filtering](#tag-filtering)
-  - [Memory Creation](#memory-creation)
-- [Performance Considerations](#performance-considerations)
-- [Database Access Patterns](#database-access-patterns)
-  - [Client-Side Pattern (Current)](#client-side-pattern-current)
-  - [Server-Side Pattern (Future)](#server-side-pattern-future)
-- [Database Scripts](#database-scripts)
-  - [npm run db](#npm-run-db)
-  - [npm run memories](#npm-run-memories)
-- [Future Optimizations](#future-optimizations)
+-   [Design Rationale](#design-rationale)
+-   [Key Query Patterns](#key-query-patterns)
+    -   [Search](#search)
+    -   [Tag Filtering](#tag-filtering)
+    -   [Memory Creation](#memory-creation)
+-   [Performance Considerations](#performance-considerations)
+-   [Database Access Patterns](#database-access-patterns)
+    -   [Client-Side Pattern (Current)](#client-side-pattern-current)
+    -   [Server-Side Pattern (Future)](#server-side-pattern-future)
+-   [Database Scripts](#database-scripts)
+    -   [npm run db](#npm-run-db)
+    -   [npm run memories](#npm-run-memories)
+-   [Future Optimizations](#future-optimizations)
 
 ## Design Rationale
 
@@ -44,7 +44,7 @@ SELECT * FROM memories
 WHERE content ILIKE '%coffee%' AND user_id = auth.uid()
 ORDER BY memory_date DESC;
 
--- Full-text search (planned for 0.2.0)
+-- Full-text search (planned for online path)
 SELECT *, ts_rank(to_tsvector('english', content), plainto_tsquery('coffee')) AS rank
 FROM memories
 WHERE to_tsvector('english', content) @@ plainto_tsquery('coffee')
@@ -109,8 +109,9 @@ All user data tables use Row-Level Security policies that automatically filter b
 For complete database command reference, see [Development Commands](development.md#database-commands) section.
 
 **Quick Reference:**
-- `npm run db setup` - Initialize database with schema and seed data
-- `npm run memories` - CLI tool to add memories manually
+
+-   `npm run db setup` - Initialize database with schema and seed data
+-   `npm run memories` - CLI tool to add memories manually
 
 ## Future Optimizations
 
